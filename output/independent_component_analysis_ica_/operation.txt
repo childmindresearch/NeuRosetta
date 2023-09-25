@@ -1,1 +1,0 @@
-Independent Component Analysis (ICA)

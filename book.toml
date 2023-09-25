@@ -1,6 +1,0 @@
-[book]
-title = "NeuRosetta"
-authors = ["NeuRosetta Contributors"]
-language = "en-US"
-multilingual = false
-src = "."
