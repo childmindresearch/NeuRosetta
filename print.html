@@ -741,70 +741,70 @@ spm_jobman('run',matlabbatch);
 </code></pre>
 <p>These are generic pipeline codes and should be adjusted to your specific case concerning image dimension, registration type, interpolation method, etc. Please refer to the official documentation of the mentioned sotware packages for more details.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="diffeomorphic-spatial-transformation"><a class="header" href="#diffeomorphic-spatial-transformation">Diffeomorphic Spatial Transformation</a></h1>
-<p>here's a brief overview with minimum examples. Please note that the specific commands and usage may vary depending on the version of the software and the specific images or data you're working with.</p>
-<pre><code class="language-bash"># AFNI (https://afni.nimh.nih.gov)
-3dQwarp -source source.nii -base target.nii -prefix transformed.nii
-
-# ANTs - Advanced Normalization Tools (https://stnava.github.io/ANTs)
-antsRegistrationSyN.sh -d 3 -f fixed.nii -m moving.nii -o transformed.nii
-
-# FSL - FMRIB Software Library (https://fsl.fmrib.ox.ac.uk)
-flirt -in moving.nii -ref fixed.nii -out transformed.nii -omat affine.mat
-fnirt --in=moving.nii --aff=affine.mat --cout=nonlinear_transf --iout=transformed.nii --ref=fixed.nii
-
-# FreeSurfer (https://surfer.nmr.mgh.harvard.edu)
-mri_normalize -mprage -i moving.nii -o transformed.nii 
-
-# MRtrix (https://mrtrix.readthedocs.io)
-mrregister moving.mif fixed.mif -type diff -nl_warp warp.mif transformed.mif
-
-# R (https://www.r-project.org) with 'ANTsR' package
-library(ANTsR)
-fixed = antsImageRead(&quot;fixed.nii&quot;)
-moving = antsImageRead(&quot;moving.nii&quot;)
-mytx = antsRegistration(fixed, moving, typeofTransform=&quot;SyN&quot;)
-transformed = antsApplyTransforms(fixed, moving, mytx$fwdtransforms)
-
-# Workbench Command (https://www.humanconnectome.org/software/connectome-workbench)
-wb_command -volume-affine-resample moving.nii affine.mat fixed.nii CUBIC transformed.nii
-
-## &lt;img src=&quot;../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
-import nibabel as nib
-import numpy as np
-from dipy.align.imwarp import SymmetricDiffeomorphicRegistration
-from dipy.align.metrics import SSDMetric, CCMetric
-mov_img = nib.load('moving.nii')
-static_img = nib.load('fixed.nii')
-sdr = SymmetricDiffeomorphicRegistration(metric=CCMetric(3),step_length=0.25, level_iters=[10], inv_iter=5)
-warped_img = sdr.optimize(static_img, mov_img)
-nib.save(warped_img, 'transformed.nii')
-</code></pre>
-<pre><code class="language-matlab">% SPM (https://www.fil.ion.ucl.ac.uk/spm)
-spm('defaults', 'PET');
-matlabbatch{1}.spm.spatial.normalise.write.subj.def = {'moving.nii'};
-matlabbatch{1}.spm.spatial.normalise.write.subj.resample = {'fixed.nii'};
-matlabbatch{1}.spm.spatial.normalise.write.woptions.bb = [-78 -112 -70
-                                                           78 76 85];
-matlabbatch{1}.spm.spatial.normalise.write.woptions.vox = [2 2 2];
-matlabbatch{1}.spm.spatial.normalise.write.woptions.interp = 4;
-matlabbatch{1}.spm.spatial.normalise.write.woptions.prefix = 'w';
-spm_jobman('run', matlabbatch);
-</code></pre>
-<p>Please, do replace 'fixed.nii' and 'moving.nii' in the commands above with your image files. Also, always check official software documentation for the proper usage instructions.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="resampling"><a class="header" href="#resampling">Resampling</a></h1>
+<p>Here are examples of scripts that perform the Diffeomorphic Spatial Transformation task using different neuroimaging and scientific computing software. Note that the syntax and structure can be different for each software. </p>
 <h2 id="afni-12"><a class="header" href="#afni-12"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
-<pre><code class="language-bash">3dresample -dxyz 1.0 1.0 1.0 -prefix resampled.nii -input input.nii
+<pre><code class="language-bash">3dAllineate -1Dmatrix_apply diffeo.example.aff12.1D -base template.nii -source example.nii -prefix example_diffeo_afni.nii
 </code></pre>
 <h2 id="ants-11"><a class="header" href="#ants-11"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
-<pre><code class="language-bash">antsApplyTransforms -d 3 -i input.nii -r reference.nii -o resampled.nii --use-NN
+<pre><code class="language-bash">antsRegistration --dimensionality 3 --float 0 --output [ diffeo , diffeoWarped.nii.gz ] --interpolation Linear --use-histogram-matching 0 --winsorize-image-intensities [ 0.005, 0.995 ] --initial-moving-transform [ template.nii.gz , example.nii.gz , 1 ] --transform SyN[ 0.1, 3, 0 ] --metric CC[ template.nii.gz , example.nii.gz , 1, 4 ] --convergence [ 100x100x70x50x20 , 1e-6, 10 ] --shrink-factors 8x4x2x1x1 --smoothing-sigmas 3x2x1x0x0vox
 </code></pre>
 <h2 id="fsl-12"><a class="header" href="#fsl-12"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
-<pre><code class="language-bash">flirt -in input.nii -ref reference.nii -out resampled.nii -applyisoxfm 1.0
+<pre><code class="language-bash">fnirt --in=example.nii --ref=template.nii --iout=example_diffeo_fsl.nii --warpres=10,10,10
 </code></pre>
 <h2 id="freesurfer-11"><a class="header" href="#freesurfer-11"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
-<pre><code class="language-bash">mri_convert --resample_type nearest --voxsize 1.0 1.0 1.0 -i input.nii -o resampled.nii
+<pre><code class="language-bash">mri_robust_register --mov example.nii --dst template.nii --lta diffeo.lta --mapmov example_diffeo_freesurfer.nii
 </code></pre>
 <h2 id="mrtrix-11"><a class="header" href="#mrtrix-11"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<pre><code class="language-bash">Notably, MRtrix does not include a standalone tool for performing diffeomorphic registration.
+
+## &lt;img src=&quot;../icons/r.png&quot; height=&quot;24px&quot; /&gt; R
+```R
+library(ANTsR)
+fixed &lt;- antsImageRead(&quot;template.nii&quot;)
+moving &lt;- antsImageRead(&quot;example.nii&quot;)
+mytx &lt;- antsRegistration(fixed, moving, typeofTransform = &quot;SyN&quot;)
+WarpedImage &lt;- antsApplyTransforms(fixed, moving, mytx$forwardTransforms)
+</code></pre>
+<h2 id="spm-11"><a class="header" href="#spm-11"><img src="image_transformation/../icons/spm.png" height="24px" /> SPM</a></h2>
+<pre><code class="language-matlab">matlabbatch{1}.spm.spatial.normalise.estwrite.subj.vol = {'example.nii'};
+matlabbatch{1}.spm.spatial.normalise.estwrite.subj.resample = {'example.nii'};
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.biasreg = 0.0001;
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.biasfwhm = 60;
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.tpm = {'TPM.nii'};
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.affreg = 'mni';
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.reg = [0 0.001 0.5 0.05 0.2];
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.fwhm = 0;
+matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.samp = 3;
+matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.bb = [-78 -112 -70; 78 76 85];
+matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.vox = [2 2 2];
+matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.interp = 4;
+spm_jobman('run', matlabbatch);
+</code></pre>
+<h2 id="workbench-command-10"><a class="header" href="#workbench-command-10"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<pre><code class="language-bash">wb_command -volume-affine-resample example.nii diffeo.warpfield.nii TEMPLATE VolumeAffineResampleMethod::CUBIC example_diffeo_wb.nii -flirt template.nii example.nii
+</code></pre>
+<h2 id="python-11"><a class="header" href="#python-11"><img src="image_transformation/../icons/python.png" height="24px" /> Python</a></h2>
+<pre><code class="language-python">import ants
+fixed = ants.image_read(&quot;template.nii&quot;)
+moving = ants.image_read(&quot;example.nii&quot;)
+mytx = ants.registration(fixed, moving, 'SyN')
+warped_moving = ants.apply_transforms(fixed, moving, mytx['fwdtransforms'])
+</code></pre>
+<p>It's important to note that some platforms do not have built-in commands to perform Diffeomorphic Spatial Transformation like MRtrix. Similarly, some of these scripts like those for PYTHON and MATLAB (SPM) need an environment in which to be executed.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="resampling"><a class="header" href="#resampling">Resampling</a></h1>
+<h2 id="afni-13"><a class="header" href="#afni-13"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<pre><code class="language-bash">3dresample -dxyz 1.0 1.0 1.0 -prefix resampled.nii -input input.nii
+</code></pre>
+<h2 id="ants-12"><a class="header" href="#ants-12"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<pre><code class="language-bash">antsApplyTransforms -d 3 -i input.nii -r reference.nii -o resampled.nii --use-NN
+</code></pre>
+<h2 id="fsl-13"><a class="header" href="#fsl-13"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<pre><code class="language-bash">flirt -in input.nii -ref reference.nii -out resampled.nii -applyisoxfm 1.0
+</code></pre>
+<h2 id="freesurfer-12"><a class="header" href="#freesurfer-12"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<pre><code class="language-bash">mri_convert --resample_type nearest --voxsize 1.0 1.0 1.0 -i input.nii -o resampled.nii
+</code></pre>
+<h2 id="mrtrix-12"><a class="header" href="#mrtrix-12"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrresize input.nii -scale 1.0 -interp nearest -datatype uint8 resampled.nii
 </code></pre>
 <h2 id="r-10"><a class="header" href="#r-10"><img src="image_transformation/../icons/r.png" height="24px" /> R</a></h2>
@@ -813,10 +813,10 @@ img &lt;- readNIfTI(&quot;input.nii&quot;, reorient = FALSE)
 resampled &lt;- resampleImage(img, c(1, 1, 1), method=&quot;nearest&quot;)
 writeNIfTI(resampled, filename=&quot;resampled.nii&quot;)
 </code></pre>
-<h2 id="workbench-command-10"><a class="header" href="#workbench-command-10"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-11"><a class="header" href="#workbench-command-11"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-resample input.nii template.nii NEAREST resampled.nii
 </code></pre>
-<h2 id="python-11"><a class="header" href="#python-11"><img src="image_transformation/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-12"><a class="header" href="#python-12"><img src="image_transformation/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 from scipy.ndimage import affine_transform
 
@@ -829,7 +829,7 @@ resampled_img = nib.Nifti1Image(resampled_data, affine)
 
 nib.save(resampled_img, 'resampled.nii')
 </code></pre>
-<h2 id="spm-11"><a class="header" href="#spm-11"><img src="image_transformation/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-12"><a class="header" href="#spm-12"><img src="image_transformation/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-Matlab">spm('defaults', 'fmri');
 matlabbatch{1}.spm.spatial.coreg.write.ref = {'input.nii'};
 matlabbatch{1}.spm.spatial.coreg.write.source = {'reference.nii'};
@@ -842,18 +842,18 @@ spm_jobman('run', matlabbatch);
 <p>In all these scripts, replace &quot;input.nii&quot; with the name of your input nifti file, and &quot;resampled.nii&quot; with the name you want for your output nifti file. Note that in some scripts a &quot;reference.nii&quot; image was used: you would also need to replace this with the filename of your reference image. The resampling has been done to voxels of size 1x1x1, using nearest neighbor interpolation.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="image-concatenation"><a class="header" href="#image-concatenation">Image Concatenation</a></h1>
 <p>for each of these software, here's a minimal example of image concatenation:</p>
-<h2 id="afni-13"><a class="header" href="#afni-13"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-14"><a class="header" href="#afni-14"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dTcat -prefix concatenated.nii input1.nii input2.nii
 </code></pre>
-<h2 id="ants-12"><a class="header" href="#ants-12"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-13"><a class="header" href="#ants-13"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">ImageMath 3 concatenated.nii m input1.nii input2.nii
 </code></pre>
-<h2 id="fsl-13"><a class="header" href="#fsl-13"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-14"><a class="header" href="#fsl-14"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmerge -t concatenated.nii input1.nii input2.nii
 </code></pre>
-<h2 id="freesurfer-12"><a class="header" href="#freesurfer-12"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-13"><a class="header" href="#freesurfer-13"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not directly support image concatenation. However, you can use mris_convert to transform surfaces into volumetric format, then use FSL or AFNI to concatenate.</p>
-<h2 id="mrtrix-12"><a class="header" href="#mrtrix-12"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-13"><a class="header" href="#mrtrix-13"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrcat input1.nii input2.nii concatenated.nii -axis 3
 </code></pre>
 <h2 id="r-11"><a class="header" href="#r-11"><img src="image_transformation/../icons/r.png" height="24px" /> R</a></h2>
@@ -863,9 +863,9 @@ nii2 = readNIfTI(&quot;input2.nii&quot;, reorient=FALSE)
 nii_concat = abind(nii1, nii2)
 writeNIfTI(nii_concat, &quot;concatenated.nii&quot;)
 </code></pre>
-<h2 id="workbench-command-11"><a class="header" href="#workbench-command-11"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-12"><a class="header" href="#workbench-command-12"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench's wb_command tool doesn't natively support 3D NIFTI concatenation you'll likely need to use another tool (like FSL, ANTs, or AFNI) to do the concatenation.</p>
-<h2 id="python-12"><a class="header" href="#python-12"><img src="image_transformation/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-13"><a class="header" href="#python-13"><img src="image_transformation/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 nii1 = nib.load('input1.nii')
 nii2 = nib.load('input2.nii')
@@ -881,11 +881,11 @@ spm_write_vol(V_concat, spm_read_vols(V_concat));
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="image-coregistration"><a class="header" href="#image-coregistration">Image Coregistration</a></h1>
 <p>I'm sorry for the confusion, but I cannot provide visual content or script files as I'm a text-based AI model developed by OpenAI. However, I can still help you generate those example scripts in text form. Here they are:</p>
-<h2 id="afni-14"><a class="header" href="#afni-14"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-15"><a class="header" href="#afni-15"><img src="image_transformation/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-Shell"># Example: Coregister anat to epi
 3dAllineate -base epi.nii -input anat.nii -prefix anat2epi
 </code></pre>
-<h2 id="ants-13"><a class="header" href="#ants-13"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-14"><a class="header" href="#ants-14"><img src="image_transformation/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-Shell"># Example: Register T2 to T1 image
 antsRegistration --dimensionality 3 --float 0 \
     --output [transform,warpedImage] \
@@ -898,15 +898,15 @@ antsRegistration --dimensionality 3 --float 0 \
     --shrink-factors 8x4x2x1 \
     --smoothing-sigmas 3x2x1x0vox
 </code></pre>
-<h2 id="fsl-14"><a class="header" href="#fsl-14"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-15"><a class="header" href="#fsl-15"><img src="image_transformation/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-Shell"># Example: Register T1 to MNI space
 flirt -in T1.nii -ref $FSLDIR/data/standard/MNI152_T1_2mm_brain -out T1_MNI -omat T1_to_MNI.mat
 </code></pre>
-<h2 id="freesurfer-13"><a class="header" href="#freesurfer-13"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-14"><a class="header" href="#freesurfer-14"><img src="image_transformation/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-Shell"># Example: BBR cost function coregistration
 bbregister --s subject --mov bold.nii --init-fsl --bold --reg bold_to_fs.dat
 </code></pre>
-<h2 id="mrtrix-13"><a class="header" href="#mrtrix-13"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-14"><a class="header" href="#mrtrix-14"><img src="image_transformation/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-Shell"># Example: Register T2 to T1 image
 mrregister T1.mif T2.mif -type rigid -mask1 T1_mask.mif -mask2 T2_mask.mif -nl_warp T12Warp.mif T21Warp.mif
 </code></pre>
@@ -920,11 +920,11 @@ t1affineparams &lt;- flirt(t1, t2, method=&quot;affine&quot;)
 t1warped &lt;- applyTransform(t1affineparams, t1)
 writeNifti(t1warped, 'T1_coreg.nii')
 </code></pre>
-<h2 id="workbench-command-12"><a class="header" href="#workbench-command-12"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-13"><a class="header" href="#workbench-command-13"><img src="image_transformation/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-Shell"># Example: Apply CIFTI standard-space registration
 wb_command -cifti-resample input.dconn.nii COLUMN target.dtseries.nii COLUMN ADAP_BARY_AREA input_to_target.dconn.nii -area-metrics input.area.surf.gii target.area.surf.gii
 </code></pre>
-<h2 id="spm-12"><a class="header" href="#spm-12"><img src="image_transformation/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-13"><a class="header" href="#spm-13"><img src="image_transformation/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">% Example: Coregister T2 to T1 image
 matlabbatch{1}.spm.spatial.coreg.estwrite.ref = {'T1.nii,1'};
 matlabbatch{1}.spm.spatial.coreg.estwrite.source = {'T2.nii,1'};
@@ -935,31 +935,31 @@ spm_jobman('run', matlabbatch);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-2"><a class="header" href="#data-format-conversion-2">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="general-linear-model-glm"><a class="header" href="#general-linear-model-glm">General Linear Model (GLM)</a></h1>
 <p>here are the minimal example scripts for GLM (General Linear Model) in each mentioned software:</p>
-<h2 id="afni-15"><a class="header" href="#afni-15"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-16"><a class="header" href="#afni-16"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dDeconvolve -input dataX.nii -polort 2 -num_stimts 1 -stim_file 1 dataY.1D -fout -tout -bucket result.nii
 </code></pre>
-<h2 id="ants-14"><a class="header" href="#ants-14"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-15"><a class="header" href="#ants-15"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>Note: ANTs does not specialize in statistical analysis, but it is possible to use ANTs for image registration, then use another tool for the GLM (such as FSL, which is next).</p>
-<h2 id="fsl-15"><a class="header" href="#fsl-15"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-16"><a class="header" href="#fsl-16"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-fsl">#! /bin/sh
 fmri=fmri
 design=design.mat
 contrasts=contrasts.con
 fsl_glm -i $fmri -d $design -c $contrasts -o betas
 </code></pre>
-<h2 id="freesurfer-14"><a class="header" href="#freesurfer-14"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-15"><a class="header" href="#freesurfer-15"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_glmfit --y y.mgh --fsgd dods.fsgd --C contrast.c.dat --glmdir glmresults
 </code></pre>
-<h2 id="mrtrix-14"><a class="header" href="#mrtrix-14"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-15"><a class="header" href="#mrtrix-15"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix does not directly support GLM, but you could utilize its underlying libraries in a custom script.</p>
 <h2 id="r-13"><a class="header" href="#r-13"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">data &lt;- read.csv(&quot;data.csv&quot;)
 model &lt;- lm(y ~ x1 + x2, data = data)
 </code></pre>
-<h2 id="workbench-command-13"><a class="header" href="#workbench-command-13"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-14"><a class="header" href="#workbench-command-14"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -cifti-stats file.dtseries.nii -reduce MEAN &gt; output.txt
 </code></pre>
-<h2 id="python-13"><a class="header" href="#python-13"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-14"><a class="header" href="#python-14"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import numpy as np
 import statsmodels.api as sm
 
@@ -969,7 +969,7 @@ y = np.array([1, 2, 3, 4])
 model = sm.OLS(y, X)
 results = model.fit()
 </code></pre>
-<h2 id="spm-13"><a class="header" href="#spm-13"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-14"><a class="header" href="#spm-14"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">matlabbatch{1}.spm.stats.factorial_design.dir = {'/data'};
 matlabbatch{1}.spm.stats.factorial_design.des.t1.scans = {'/data/subj1.nii,1'};
 ..
@@ -978,20 +978,20 @@ spm_jobman('run', matlabbatch);
 <p>Note that you will need to individualize these templates to your specific analysis, file-naming conventions, and directory structure. It may also be necessary to preprocess the data prior to analysis. These scripts do not include data checking, preprocessing, multiple comparison correction, diagnostics, or the generation of any results' reports.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="independent-component-analysis-ica"><a class="header" href="#independent-component-analysis-ica">Independent Component Analysis (ICA)</a></h1>
 <p>Here are minimal example scripts to perform Independent Component Analysis (ICA) using different neuroimaging analysis software and programming languages. These scripts work with already preprocessed and input data:</p>
-<h2 id="afni-16"><a class="header" href="#afni-16"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-17"><a class="header" href="#afni-17"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI doesn't contain direct ICA functionality. However, it can work with the MELODIC outputs which are generated by FSL.</p>
 <pre><code class="language-sh">3dcalc -a melodic_IC.nii.gz[0] -expr 'a' -prefix IC0.nii
 </code></pre>
-<h2 id="ants-15"><a class="header" href="#ants-15"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-16"><a class="header" href="#ants-16"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs also does not have direct ICA functionality, but just like AFNI it can handle MELODIC outputs of FSL.</p>
 <pre><code class="language-sh">ImageMath 3 melodic_IC.nii.gz TimeSeriesDisassemble melodic_IC.nii.gz
 </code></pre>
-<h2 id="fsl-16"><a class="header" href="#fsl-16"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-17"><a class="header" href="#fsl-17"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-sh">melodic -i preprocessed_fMRI.nii.gz -o output --nobet --bgthreshold=10 --tr=2.0 --mmthresh=0.5 --Oall
 </code></pre>
-<h2 id="freesurfer-15"><a class="header" href="#freesurfer-15"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-16"><a class="header" href="#freesurfer-16"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not possess independent native ICA tools, but it can be used interconnectedly with other tools mentioned here like FSL's MELODIC and MATLAB's SPM.</p>
-<h2 id="mrtrix-15"><a class="header" href="#mrtrix-15"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-16"><a class="header" href="#mrtrix-16"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix does not have a direct ICA function. It focuses on diffusion MRI, tractography, and quantitative structural connectivity analysis.</p>
 <h2 id="r-14"><a class="header" href="#r-14"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>Here is a simple example using the <code>fastICA</code> package in R:</p>
@@ -1002,9 +1002,9 @@ s &lt;- fastICA(data, n.comp = 20, algorithm = &quot;parallel&quot;)
 
 # The independent components estimates are stored in s$S
 </code></pre>
-<h2 id="workbench-command-14"><a class="header" href="#workbench-command-14"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-15"><a class="header" href="#workbench-command-15"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command (wb_command) does not contain direct ICA functionality. It's primarily used for exploring and visualising neuroimaging data, particularly surface-based data.</p>
-<h2 id="python-14"><a class="header" href="#python-14"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-15"><a class="header" href="#python-15"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>Python's <code>scikit-learn</code> library contains an implementation of ICA. </p>
 <pre><code class="language-python">from sklearn.decomposition import FastICA
 
@@ -1013,7 +1013,7 @@ S_ = ica.fit_transform(X)  # Reconstruct signals
 
 # Assuming 'X' is your matrix with fMRI data. The ICA components are stored in 'S_'.
 </code></pre>
-<h2 id="spm-14"><a class="header" href="#spm-14"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-15"><a class="header" href="#spm-15"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">matlabbatch{1}.spm.tools.gift.group_ica.fmri_data = '&lt;YOUR_NIFTI_FILES_HERE&gt;';
 matlabbatch{1}.spm.tools.gift.group_ica.param_mask = '&lt;YOUR_MASK_HERE&gt;';
 matlabbatch{1}.spm.tools.gift.group_ica.num_ica_comp = 20;
@@ -1050,7 +1050,7 @@ fsl_write(cor, &quot;correlation.nii.gz&quot;)
 <p><strong>7. Workbench Command - Seed-Based Connectivity Analysis</strong></p>
 <pre><code class="language-bash">wb_command -cifti-correlation output.cii seed.dscalar.nii out.dconn.nii
 </code></pre>
-<h2 id="spm-15"><a class="header" href="#spm-15"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-16"><a class="header" href="#spm-16"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-python">import os
 
 os.system(&quot;&quot;&quot;matlab -nodisplay -nosplash -nodesktop -r &quot; \
@@ -1065,10 +1065,10 @@ os.system(&quot;&quot;&quot;matlab -nodisplay -nosplash -nodesktop -r &quot; \
 <p>Again, you will need to adjust these to fit your needs depending on specific software versions, installed packages, and paths to inputs/outputs. The code also assumes that the necessary input data (functional and seed region images) are already preprocessed and ready for connectivity analysis. Always remember to install the necessary libraries before running the scripts and always validate the results in the context of the specific project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="region-of-interest-roi-analysis"><a class="header" href="#region-of-interest-roi-analysis">Region-of-Interest (ROI) Analysis</a></h1>
 <p>here are minimal examples of scripts for Region-of-Interest (ROI) Analysis in the respective software packages. Please make sure that appropriate data sets and data paths are provided while running these scripts.</p>
-<h2 id="afni-17"><a class="header" href="#afni-17"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-18"><a class="header" href="#afni-18"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dROIstats -mask ROI.nii -quiet epi.nii &gt; roistats.txt
 </code></pre>
-<h2 id="ants-16"><a class="header" href="#ants-16"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-17"><a class="header" href="#ants-17"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-python">from nipype.interfaces.ants import MeasureImageSimilarity
 similarity = MeasureImageSimilarity()
 
@@ -1078,13 +1078,13 @@ similarity.inputs.moving_image = 'moving_image.nii'
 similarity.inputs.radius_or_number_of_bins = 4
 similarity.run()
 </code></pre>
-<h2 id="fsl-17"><a class="header" href="#fsl-17"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-18"><a class="header" href="#fsl-18"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslstats input_image.nii.gz -l 500 -u 600 -V &gt; output.txt
 </code></pre>
-<h2 id="freesurfer-16"><a class="header" href="#freesurfer-16"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-17"><a class="header" href="#freesurfer-17"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_segstats --seg seg.nii --i scalar_map.nii --avgwf avg_roi_values.txt
 </code></pre>
-<h2 id="mrtrix-16"><a class="header" href="#mrtrix-16"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-17"><a class="header" href="#mrtrix-17"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrstats input_image.mif -mask roi.mif -output mean &gt; roistats.txt
 </code></pre>
 <h2 id="r-15"><a class="header" href="#r-15"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -1095,10 +1095,10 @@ roi &lt;- readnii(&quot;mask.nii&quot;)
 roi_stats &lt;- vol[roi==1]
 mean(roi_stats)
 </code></pre>
-<h2 id="workbench-command-15"><a class="header" href="#workbench-command-15"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-16"><a class="header" href="#workbench-command-16"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-stats input_volume.nii -roi mask_volume.nii &gt; roistats.txt
 </code></pre>
-<h2 id="python-15"><a class="header" href="#python-15"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-16"><a class="header" href="#python-16"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nipype.interfaces.fsl import ImageMaths
 from nilearn import masking
 import nibabel as nib
@@ -1114,7 +1114,7 @@ masked_data = masking.apply_mask(img, 'ROI.nii')
 
 mean_val = masked_data.mean()
 </code></pre>
-<h2 id="spm-16"><a class="header" href="#spm-16"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-17"><a class="header" href="#spm-17"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">V = spm_vol('input_image.nii');
 Y = spm_read_vols(V);
 roi = spm_vol('roi.nii');
@@ -1125,19 +1125,19 @@ roi_mean = mean(maskedY(mask &gt; 0));
 <p>Note: Replace 'image.nii', 'mask.nii', 'input_image.nii', etc. with your actual nifti file names. These scripts suppose that the current directory contains the necessary files.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="multivariate-pattern-analysis-mvpa"><a class="header" href="#multivariate-pattern-analysis-mvpa">Multivariate Pattern Analysis (MVPA)</a></h1>
 <p>I'm sorry but it's not possible to provide full scripts for each of these softwares, especially since conducting MVPA includes steps like preprocessing, feature extraction, training a model, and testing it, which can not be encapsulated in a few lines of codes. However, I can definitely provide you with basic syntax and commands used in each software.</p>
-<h2 id="afni-18"><a class="header" href="#afni-18"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-19"><a class="header" href="#afni-19"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>In AFNI, you can use the 3dsvm function to perform Multivariate Pattern Analysis. The typical usage is:</p>
 <pre><code class="language-sh">3dsvm -bucket stats -mask mask+orig -trainvol training+orig -trainlabels training_labels.1D -testvol testing+orig -testlabels testing_labels.1D
 </code></pre>
-<h2 id="ants-17"><a class="header" href="#ants-17"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-18"><a class="header" href="#ants-18"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs is typically used for registration and normalization. It doesn't directly support MVPA from command line, but you can load the image into python or any other tool to perform MVPA.</p>
-<h2 id="fsl-18"><a class="header" href="#fsl-18"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-19"><a class="header" href="#fsl-19"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>FSL has a tool called PyMVPA which can be used for Multivariate Pattern Analysis. The sample usage can be like this:</p>
 <pre><code class="language-sh">fsl_sub python mvpa2.suite.Classifier filename.nii.gz
 </code></pre>
-<h2 id="freesurfer-17"><a class="header" href="#freesurfer-17"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-18"><a class="header" href="#freesurfer-18"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>Like ANTs, FreeSurfer is used mostly for segmentation and registration but it doesn't directly support MVPA.</p>
-<h2 id="mrtrix-17"><a class="header" href="#mrtrix-17"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-18"><a class="header" href="#mrtrix-18"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix is used more for diffusion imaging analysis. For MVPA, you would typically export the imaging data after preprocessing and perform the analysis with another tool like python or R.</p>
 <h2 id="r-16"><a class="header" href="#r-16"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>In R, you can use the nnet or e1071 libraries to perform MVPA. Here is a short example:</p>
@@ -1145,9 +1145,9 @@ roi_mean = mean(maskedY(mask &gt; 0));
 svm_model &lt;- svm(label~., data=train_data)
 predictions &lt;- predict(svm_model, newdata=test_data)
 </code></pre>
-<h2 id="workbench-command-16"><a class="header" href="#workbench-command-16"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-17"><a class="header" href="#workbench-command-17"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>The Connectome Workbench doesn't directly support MVPA as its primarily a visualization tool. You would need to export your data to another tool for statistical learning.</p>
-<h2 id="python-16"><a class="header" href="#python-16"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-17"><a class="header" href="#python-17"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>Here's how you might use nilearn to perform MVPA:</p>
 <pre><code class="language-python">from nilearn.input_data import NiftiMasker
 from sklearn.svm import SVC
@@ -1164,7 +1164,7 @@ for train, test in cv.split(X):
     svm.fit(X[train], y[train])
     predictions = svm.predict(X[test])
 </code></pre>
-<h2 id="spm-17"><a class="header" href="#spm-17"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-18"><a class="header" href="#spm-18"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>SPM doesn't directly support MVPA; typically one would use the CoSMoMVPA toolbox in conjunction with SPM. An example script might look like this:</p>
 <pre><code class="language-matlab">cosmo_config();
 data_path=cosmo_config().tutorial_data_path;
@@ -1175,14 +1175,14 @@ clf = cosmo_classify_svm(ds.samples, ds.sa.chunks);
 <p>Remember to fit the MVPA task to your specific needs in terms of preprocessing, model training, testing and validation.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="event-related-analysis"><a class="header" href="#event-related-analysis">Event-Related Analysis</a></h1>
 <p>Sorry for the misunderstanding, but writing scripts for all of these platforms would be quite comprehensive and potentially long. However, I can provide a simple, introductory script for each one to give you a basic understanding of how they work.</p>
-<h2 id="afni-19"><a class="header" href="#afni-19"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-20"><a class="header" href="#afni-20"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">## &lt;img src=&quot;../icons/r.png&quot; height=&quot;24px&quot; /&gt; Run 3dDeconvolve to perform the analysis
 3dDeconvolve -input data.nii.gz -censor motion_censor.1D \
 -npolort 4 -num_stimts 1 -stim_times 1 task.1D 'BLOCK(15,1)' \
 -stim_label 1 task -fout -tout -x1D X.xmat.1D -xjpeg X.jpg \
 -fitts fitts.nii.gz -errts errts.nii.gz -bucket stats.nii.gz
 </code></pre>
-<h2 id="ants-18"><a class="header" href="#ants-18"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-19"><a class="header" href="#ants-19"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">## Perform registration
 antsRegistration --dimensionality 3 --float 0 \
 --output [output, warped.nii.gz] --interpolation Linear \
@@ -1190,20 +1190,20 @@ antsRegistration --dimensionality 3 --float 0 \
 --transform Rigid[0.1] --metric MI[fixed.nii.gz, moving.nii.gz, 1, 32, Regular, 0.25] \
 --convergence [1000x500x250x100, 1e-6, 10] --shrink-factors 8x4x2x1 --smoothing-sigmas 3x2x1x0vox
 </code></pre>
-<h2 id="fsl-19"><a class="header" href="#fsl-19"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-20"><a class="header" href="#fsl-20"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">## &lt;img src=&quot;../icons/r.png&quot; height=&quot;24px&quot; /&gt; Run GLM with FEAT
 feat_design &lt;- 'design.fsf'
 system2('feat', feat_design)
 </code></pre>
-<h2 id="freesurfer-18"><a class="header" href="#freesurfer-18"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-19"><a class="header" href="#freesurfer-19"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">## &lt;img src=&quot;../icons/r.png&quot; height=&quot;24px&quot; /&gt; Run recon-all for structural analysis
 recon-all -subjid Sample -i sample.nii.gz -all
 </code></pre>
-<h2 id="mrtrix-18"><a class="header" href="#mrtrix-18"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-19"><a class="header" href="#mrtrix-19"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash"># Compute a brain mask for the FOD image
 dwi2mask input.mif mask.mif
 </code></pre>
-<h2 id="workbench-command-17"><a class="header" href="#workbench-command-17"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-18"><a class="header" href="#workbench-command-18"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">## Volume to surface mapping 
 wb_command -volume-to-surface-mapping volume.nifti my_surface.gii output.shape.gii -ribbon-constrained my_white.gii my_pial.gii
 </code></pre>
@@ -1212,7 +1212,7 @@ wb_command -volume-to-surface-mapping volume.nifti my_surface.gii output.shape.g
 library(neurobase)
 img &lt;- readnii(&quot;T1-image.nii.gz&quot;)
 </code></pre>
-<h2 id="spm-18"><a class="header" href="#spm-18"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-19"><a class="header" href="#spm-19"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('defaults', 'fmri');
 spm_jobman('initcfg');
 
@@ -1253,21 +1253,21 @@ summary(model)
 <p>For AFNI, ANTs, FreeSurfer, MRtrix, Workbench Command, SPM (via a MATLAB script) and pure Python, it'd be better to ask separately as each of these have different structures and syntax for scripting.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="graph-theory-analysis"><a class="header" href="#graph-theory-analysis">Graph Theory Analysis</a></h1>
 <p>it's not feasible to provide a complete script for each software package due to the complexity involved in Graph Theory Analysis. However, I can provide brief examples of the necessary commands.</p>
-<h2 id="afni-20"><a class="header" href="#afni-20"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-21"><a class="header" href="#afni-21"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dNetCorr -in_rois ROI_MASK -inset FUNC_DATA
 </code></pre>
 <p>In AFNI, <code>3dNetCorr</code> command is used to calculate correlations between different regions of interest defined in <code>ROI_MASK</code> on the functional data <code>FUNC_DATA</code>.</p>
-<h2 id="ants-19"><a class="header" href="#ants-19"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-20"><a class="header" href="#ants-20"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTS doesn't directly generate graphs. But it is used to preprocess MRI images. For graph analysis, the outputs are used in other software like FSL or AFNI.</p>
-<h2 id="fsl-20"><a class="header" href="#fsl-20"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-21"><a class="header" href="#fsl-21"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmaths FUNC_DATA -Tmean MEAN_FUNC_DATA
 fslmaths FUNC_DATA -bptf $(echo &quot;scale=2; 2.8/$TR&quot; | bc) -1 -add MEAN_FUNC_DATA NORM_FUNC_DATA
 fslmeants -i NORM_FUNC_DATA -o ts.txt -m ROI_MASK
 </code></pre>
 <p>In FSL, preprocessing like normalizing and bandpass filtering is performed. Then mean time series <code>ts.txt</code> in the region of interest defined by <code>ROI_MASK</code> is computed.</p>
-<h2 id="freesurfer-19"><a class="header" href="#freesurfer-19"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-20"><a class="header" href="#freesurfer-20"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer itself does not contain Graph Theory Analysis tools but is used for preprocessing steps. Brain surfaces obtained from FreeSurfer can be used in connectome software like the Connectome Mapping Toolkit.</p>
-<h2 id="mrtrix-19"><a class="header" href="#mrtrix-19"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-20"><a class="header" href="#mrtrix-20"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>In MRtrix, tck2connectome is used to generate a connectome from a tractogram.</p>
 <pre><code class="language-bash">tck2connectome tracks.tck nodes.mif connectome.csv
 </code></pre>
@@ -1279,18 +1279,18 @@ centrality &lt;- betweenness(graph)
 print(centrality)
 </code></pre>
 <p>R's igraph package is used for the graph analysis where edges are defined in a text file.</p>
-<h2 id="workbench-command-18"><a class="header" href="#workbench-command-18"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-19"><a class="header" href="#workbench-command-19"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench mostly deals with surface analyses. It can use CIFTI files to generate graphs:</p>
 <pre><code class="language-bash">wb_command -cifti-correlation FUNC_DATA.dtseries.nii output.dconn.nii
 </code></pre>
-<h2 id="python-17"><a class="header" href="#python-17"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-18"><a class="header" href="#python-18"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import networkx as nx
 G = nx.read_edgelist('edges.txt')
 centrality = nx.betweenness_centrality(G)
 print(centrality)
 </code></pre>
 <p>In Python, the NetworkX package is often used for graph theory analysis.</p>
-<h2 id="spm-19"><a class="header" href="#spm-19"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-20"><a class="header" href="#spm-20"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>SPM's CONN toolbox is used for the graph theoretical analysis:</p>
 <pre><code class="language-matlab">conn_batch('setup.conditions.name', 'rest');
 conn_batch('Setup.rois.files', 'ROI_MASK');
@@ -1302,7 +1302,7 @@ conn_batch('Run');
 <p><strong>1. AFNI (Analysis of Functional NeuroImages)</strong> </p>
 <pre><code>3dcalc -a 'FWHM+orig[0]' -b 'FWHM+orig[1]' -c 'FWHM+orig[2]' -expr 'sqrt(a*a+b*b+c*c)' -prefix FWHM_total
 </code></pre>
-<h2 id="ants-20"><a class="header" href="#ants-20"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-21"><a class="header" href="#ants-21"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code>#!/bin/bash
 fixedImage=~/input/fixed.nii.gz
 movingImage=~/input/moving.nii.gz
@@ -1310,18 +1310,18 @@ outputWarpedImage=~/output/movingWarpedIntoFixed.nii.gz
 
 antsRegistrationSyN.sh -d 3 -f $fixedImage -m $movingImage -o $outputWarpedImage
 </code></pre>
-<h2 id="fsl-21"><a class="header" href="#fsl-21"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-22"><a class="header" href="#fsl-22"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>FSL provides network modeling tool which called FSLNets.  You have to follow following step:</p>
 <pre><code>#!/bin/sh 
 
 melodic -i4D input.nii.gz -o output --nobet -a concat -d 25 --tr=2 
 </code></pre>
-<h2 id="freesurfer-20"><a class="header" href="#freesurfer-20"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-21"><a class="header" href="#freesurfer-21"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code>#!/bin/bash
 SUBJECTS_DIR=/path/to/subjects
 recon-all -s bert -all 
 </code></pre>
-<h2 id="mrtrix-20"><a class="header" href="#mrtrix-20"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-21"><a class="header" href="#mrtrix-21"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code>dwi2response dhollander input_dwi.mif wm_response.txt gm_response.txt csf_response.txt
 </code></pre>
 <h2 id="r-20"><a class="header" href="#r-20"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -1329,11 +1329,11 @@ recon-all -s bert -all
 g &lt;- graph.formula(A -+ B, B -+ C, C -+ A)
 plot(g)
 </code></pre>
-<h2 id="workbench-command-19"><a class="header" href="#workbench-command-19"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-20"><a class="header" href="#workbench-command-20"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code>wget https://yourURL/path/to/your.dconn.nii
 wb_command -cifti-parcellate your.dconn.nii yourParcellation.dlabel.nii COLUMN yourOutput.dscalar.nii -method MEAN
 </code></pre>
-<h2 id="python-18"><a class="header" href="#python-18"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-19"><a class="header" href="#python-19"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>In python, we often use nilearn to perform a simple correlation matrix.</p>
 <pre><code class="language-python">from nilearn import datasets
 from nilearn.input_data import NiftiLabelsMasker
@@ -1355,17 +1355,17 @@ correlation_matrix = correlation_measure.fit_transform([time_series])[0]
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dynamic-connectivity-analysis"><a class="header" href="#dynamic-connectivity-analysis">Dynamic Connectivity Analysis</a></h1>
 <p>Sorry for the misunderstanding, but creating scripts for Dynamic Connectivity Analysis in all of these platforms can't be reduced into a few short lines as such a task includes multiple complex steps and is highly dependent on the exact methods you'd like to employ, the desired outputs, and the image format you are starting with. However, as a starting point, I can provide minimal example scripts for time-series extraction which is generally the first step of any Connectivity Analysis. </p>
 <p>Let's assume we have preprocessed fMRI data and a mask/region of interest (ROI) for each of them.</p>
-<h2 id="afni-21"><a class="header" href="#afni-21"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-22"><a class="header" href="#afni-22"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dmaskave -quiet -mask my_mask.nii.gz my_preprocessed_fmri_data.nii.gz &gt; time_series.txt
 </code></pre>
-<h2 id="ants-21"><a class="header" href="#ants-21"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-22"><a class="header" href="#ants-22"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't include dedicated functionalities for time-series extraction. However, you can use it for image preprocessing before extracting the time-series using other tools.</p>
-<h2 id="fsl-22"><a class="header" href="#fsl-22"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-23"><a class="header" href="#fsl-23"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmeants -i my_preprocessed_fmri_data.nii.gz -o time_series.txt -m my_mask.nii.gz
 </code></pre>
-<h2 id="freesurfer-21"><a class="header" href="#freesurfer-21"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-22"><a class="header" href="#freesurfer-22"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer doesn't directly support this functionality. It focuses on reconstruction and analysis of cortical surface. After completing these steps with FreeSurfer, you may use other tools to extract time-series.</p>
-<h2 id="mrtrix-21"><a class="header" href="#mrtrix-21"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-22"><a class="header" href="#mrtrix-22"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrstats my_preprocessed_fmri_data.nii.gz -mask my_mask.nii.gz -output mean &gt; time_series.txt
 </code></pre>
 <h2 id="r-21"><a class="header" href="#r-21"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -1375,9 +1375,9 @@ mask &lt;- fslr::readnii(&quot;my_mask.nii.gz&quot;)
 time_series &lt;- colMeans(dat[mask == 1, ])
 write.table(time_series, file = &quot;time_series.txt&quot;)
 </code></pre>
-<h2 id="workbench-command-20"><a class="header" href="#workbench-command-20"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-21"><a class="header" href="#workbench-command-21"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command is mainly for dealing data in particular formats (like CIFTI). Please use other tools for extracting time series. </p>
-<h2 id="python-19"><a class="header" href="#python-19"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-20"><a class="header" href="#python-20"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 import numpy as np
 img = nib.load(&quot;my_preprocessed_fmri_data.nii.gz&quot;)
@@ -1385,7 +1385,7 @@ mask = nib.load(&quot;my_mask.nii.gz&quot;).get_fdata().astype(bool)
 time_series = np.mean(img.get_fdata()[mask], axis=0)
 np.savetxt(&quot;time_series.txt&quot;, time_series)
 </code></pre>
-<h2 id="spm-20"><a class="header" href="#spm-20"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-21"><a class="header" href="#spm-21"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">Vf = spm_vol('my_preprocessed_fmri_data.nii.gz');
 Vmask = spm_vol('my_mask.nii.gz');
 mask = spm_read_vols(Vmask) &gt; 0;
@@ -1396,9 +1396,9 @@ dlmwrite('time_series.txt',time_series,'delimiter','\t');
 <p>Remember, the resultant time-series files can be used as a starting point for Dynamic Connectivity Analysis. Dynamic Connectivity Analysis involves many steps like sliding-window or wavelet based analysis, statistical analysis, and possibly graph theoretical analysis, which requires additional code and additional libraries/packages.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="granger-causality-analysis"><a class="header" href="#granger-causality-analysis">Granger Causality Analysis</a></h1>
 <p>it's quite a complex task to write scripts for Granger causality Analysis for all these different frameworks as they each have different methods and procedures for doing such analyses. Here are limited examples for a couple of the mentioned frameworks:</p>
-<h2 id="afni-22"><a class="header" href="#afni-22"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-23"><a class="header" href="#afni-23"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI does not natively support Granger Causality Analysis. We typically need to use another software like R or Python's scipy library and then import the results back into AFNI for further analysis. </p>
-<h2 id="fsl-23"><a class="header" href="#fsl-23"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-24"><a class="header" href="#fsl-24"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>Like AFNI, FSL does not directly support Granger Causality Analysis. A similar approach must be taken with substituting sections of the analysis with Python or R scripts.</p>
 <h2 id="r-22"><a class="header" href="#r-22"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>The <code>lmtest</code> library in R can be used to perform Granger Causality Analysis.</p>
@@ -1410,7 +1410,7 @@ summary(fit)  # Review the fit
 
 grangertest(y ~ x, order=1)  # Perform the Granger causality test
 </code></pre>
-<h2 id="python-20"><a class="header" href="#python-20"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-21"><a class="header" href="#python-21"><img src="statistical_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>The <code>statsmodels</code> Python library can also be used for performing Granger causality tests.</p>
 <pre><code class="language-python">import numpy as np
 from statsmodels.tsa.stattools import grangercausalitytests
@@ -1428,11 +1428,11 @@ result = grangercausalitytests(xy, maxlag=2, verbose=False)
 <p>For the other software like ANTs, FreeSurfer, MRtrix, SPM (via a MATLAB script), and Workbench Command, it's the same case as with AFNI and FSL. They do not natively support Granger causality analysis and would require integration with Python, R or possibly MATLAB scripts. Generally, Granger causality analyses are typically conducted in R or MATLAB due to the relatively simpler syntax and inbuilt libraries specifically designed for such analysis. Python has also become a popular choice due to the presence of the scipy and statsmodels packages.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="functional-connectivity-density-mapping"><a class="header" href="#functional-connectivity-density-mapping">Functional Connectivity Density Mapping</a></h1>
 <p>I'm sorry for any confusion, but as a text-based model AI developed by OpenAI, I'm unable to execute code or provide scripts for each of the different neuroimaging software tools you mentioned. However, I can certainly explain a general approach to perform Functional Connectivity Density Mapping using these tools. Let's go through each one.</p>
-<h2 id="afni-23"><a class="header" href="#afni-23"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-24"><a class="header" href="#afni-24"><img src="statistical_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI does not have a specific function dedicated to Functional Connectivity Density Mapping (FCDM). General functional connectivity can be conducted using 3dTcorr1D or 3dTcorrMap.</p>
-<h2 id="ants-22"><a class="header" href="#ants-22"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-23"><a class="header" href="#ants-23"><img src="statistical_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs mainly focuses on anatomical image registration and segmentation, it does not have a specific function for FCDM.</p>
-<h2 id="fsl-24"><a class="header" href="#fsl-24"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-25"><a class="header" href="#fsl-25"><img src="statistical_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code># Generate a mask for the brain
 bet2 subject_image.nii subject_brain.nii
 
@@ -1440,15 +1440,15 @@ bet2 subject_image.nii subject_brain.nii
 fsl_glm -i subjectA.nii.gz -d matrix -o fcdm.nii.gz
 </code></pre>
 <p>The <code>fsl_glm</code> command can be used to perform general linear modelling, which is useful for FCDM. You may need to construct your design matrix to represent the correlations between regions of interest.</p>
-<h2 id="freesurfer-22"><a class="header" href="#freesurfer-22"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-23"><a class="header" href="#freesurfer-23"><img src="statistical_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>There's no specific method in FreeSurfer for FCDM. FreeSurfer is best used for cortical thickness and surface-based processing.</p>
-<h2 id="mrtrix-22"><a class="header" href="#mrtrix-22"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-23"><a class="header" href="#mrtrix-23"><img src="statistical_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix is more tuned for diffusion MRI analyses, and does not have straightforward functions for FCDM.</p>
 <h2 id="r-23"><a class="header" href="#r-23"><img src="statistical_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>For the R programming language, you would need to make use of existing neuroimaging packages, such as the <code>neurobase</code> package, and write custom code to perform FCDM.</p>
-<h2 id="workbench-command-21"><a class="header" href="#workbench-command-21"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-22"><a class="header" href="#workbench-command-22"><img src="statistical_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>It mainly focuses on surface-based data visualization. FCDM task would be better accomplished through other software.</p>
-<h2 id="spm-21"><a class="header" href="#spm-21"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-22"><a class="header" href="#spm-22"><img src="statistical_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">% Load the SPM.mat file
 load('SPM.mat')
 
@@ -1469,24 +1469,24 @@ save('fcdm.mat', 'conn')
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-3"><a class="header" href="#data-format-conversion-3">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cortical-surface-reconstruction"><a class="header" href="#cortical-surface-reconstruction">Cortical Surface Reconstruction</a></h1>
 <p>while I cannot run these scripts for you, I can certainly provide an example of how they might be structured. Here are example scripts for the different brain imaging software packages you mentioned:</p>
-<h2 id="afni-24"><a class="header" href="#afni-24"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-25"><a class="header" href="#afni-25"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code>#!/bin/tcsh
 3dSkullStrip -input T1.nii -prefix brain_mask.nii
 3dresample -master T1.nii  -prefix brain_mask_resampled.nii
 </code></pre>
-<h2 id="ants-23"><a class="header" href="#ants-23"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-24"><a class="header" href="#ants-24"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code>#Resampling
 antsApplyTransforms -d 3 -i brain.nii.gz -r brain.nii.gz  -o brain_resampled.nii.gz -n NearestNeighbor
 </code></pre>
-<h2 id="fsl-25"><a class="header" href="#fsl-25"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-26"><a class="header" href="#fsl-26"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code># skull stripping 
 bet T1.nii T1_brain.nii
 </code></pre>
-<h2 id="freesurfer-23"><a class="header" href="#freesurfer-23"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-24"><a class="header" href="#freesurfer-24"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code>#!/bin/tcsh
 recon-all -i T1.nii -subjid subject1 -all
 </code></pre>
-<h2 id="mrtrix-23"><a class="header" href="#mrtrix-23"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-24"><a class="header" href="#mrtrix-24"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code># mask generation
 dwi2mask dwi.mif mask.mif
 </code></pre>
@@ -1495,11 +1495,11 @@ dwi2mask dwi.mif mask.mif
 library(neurobase)
 brain_mask &lt;- mask(brain, type = &quot;otu&quot;)
 </code></pre>
-<h2 id="workbench-command-22"><a class="header" href="#workbench-command-22"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-23"><a class="header" href="#workbench-command-23"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code># Generate a mask with wb_command 
 wb_command -volume-math &quot;(x &gt; 0) ? 1 : 0&quot; brain_mask.nii -var x T1.nii
 </code></pre>
-<h2 id="python-21"><a class="header" href="#python-21"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-22"><a class="header" href="#python-22"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 
 # Load data
@@ -1509,7 +1509,7 @@ img = nib.load('T1.nii.gz')
 resampled_img = nib.Nifti1Image(img.dataobj, img.affine.dot(np.diag([1, 2, 3, 1])))
 nib.save(resampled_img, 'brain.nii.gz')
 </code></pre>
-<h2 id="spm-22"><a class="header" href="#spm-22"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-23"><a class="header" href="#spm-23"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">spm('Defaults','fMRI');
 spm_jobman('initcfg');
 clear matlabbatch;
@@ -1528,31 +1528,31 @@ clear matlabbatch;
 <p>Also, the FreeSurfer and AFNI scripts are written in tcsh instead of bash which is more common today. You could run these command scripts in bash on most systems.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="subcortical-structure-segmentation"><a class="header" href="#subcortical-structure-segmentation">Subcortical Structure Segmentation</a></h1>
 <p>Unfortunately, writing scripts for all of these requests would take a significant amount of text and time, and it's also worth noting that without a dataset to operate on it's hard to be more precise. For the sake of brevity and achieving your ask, here's a summarization for each of the requested software:</p>
-<h2 id="afni-25"><a class="header" href="#afni-25"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-26"><a class="header" href="#afni-26"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dSeg -anat Struct.nii -mask AUTO -classes 'CSF ; GM ; WM' -bias_classes 'GM ; WM' -bias_fwhm 25 -mixfrac UNI -main_N 5 -blur_meth BFT
 </code></pre>
 <p>The script talks to a function in the AFNI package for segmentation.</p>
-<h2 id="ants-24"><a class="header" href="#ants-24"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-25"><a class="header" href="#ants-25"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">antsAtroposN4.sh -d 3 -a struct.nii -x struct_mask.nii -o output -c 2
 </code></pre>
 <p>This script uses ANTs' AtroposN4.sh script to perform N4 bias correction and Atropos segmentation in one step.</p>
-<h2 id="fsl-26"><a class="header" href="#fsl-26"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-27"><a class="header" href="#fsl-27"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fast -t 1 -n 3 -H 0.1 -I 4 -l 20.0 -o fslout struct_brain.nii
 </code></pre>
 <p>The FAST tool of FSL is used to segment the brain image.</p>
-<h2 id="freesurfer-24"><a class="header" href="#freesurfer-24"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-25"><a class="header" href="#freesurfer-25"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -s subject1 -i struct.nii -all
 </code></pre>
 <p>The <code>recon-all</code> command performs several preprocessing steps, including subcortical segmentation.</p>
-<h2 id="mrtrix-24"><a class="header" href="#mrtrix-24"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-25"><a class="header" href="#mrtrix-25"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">5ttgen fsl struct.nii 5tt.mif
 </code></pre>
 <p>This script calls MRtrix's 5ttgen script to perform segmentation.</p>
 <h2 id="r-25"><a class="header" href="#r-25"><img src="structural_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>R doesn't have a dedicated package for brain imaging computations. However, you could theoretically leverage the <code>oro.nifti</code> package to read nifti images into R and perform some sort of segmentation using conventional image segmentation techniques. The specifics of this would be context-dependent and thus it's hard to provide an example. </p>
-<h2 id="workbench-command-23"><a class="header" href="#workbench-command-23"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-24"><a class="header" href="#workbench-command-24"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench command is more suited towards visualizing and manipulating existing brain surface estimates and it doesn't really support complex operations such as segmentation. </p>
-<h2 id="python-22"><a class="header" href="#python-22"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-23"><a class="header" href="#python-23"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nilearn import datasets, image, plotting
 from nilearn.regions import connected_label_regions
 
@@ -1565,7 +1565,7 @@ regions_img, labels = connected_label_regions(label_img, min_size=500, connect_d
 plotting.plot_roi(regions_img, cmap=plotting.cm.paired)
 </code></pre>
 <p>This Python script uses the AAL atlas prepackaged with the nilearn package for segmentation and then visualizes the resulting regions.</p>
-<h2 id="spm-23"><a class="header" href="#spm-23"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-24"><a class="header" href="#spm-24"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('Defaults','fMRI');
 spm_jobman('initcfg');
 clear matlabbatch;
@@ -1582,26 +1582,26 @@ spm_jobman('run',matlabbatch);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="white-matter-tractography"><a class="header" href="#white-matter-tractography">White Matter Tractography</a></h1>
 <p>For legal and ethical reasons, all personal health information is confidential and protected by law, so it's impossible for me to show you the brain images. But I can provide you example scripts for each software you mentioned. </p>
 <p>Please note that these scripts assume that you're working with valid and anonymized DICOM, NIFTI, or similar medical imaging files, and that you've properly installed and configured all required imaging software libraries and dependencies.</p>
-<h2 id="afni-26"><a class="header" href="#afni-26"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-27"><a class="header" href="#afni-27"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code>3dDWItoDT -prefix DTI dataset.nii
 3dDWUncert -inset DTI+orig
 3dTrackID -mode TEST -dti_in DTI+orig
 </code></pre>
-<h2 id="ants-25"><a class="header" href="#ants-25"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-26"><a class="header" href="#ants-26"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code>antsRegistrationSyN.sh -d 3 -f fixed.nii.gz -m moving.nii.gz -o output/output
 </code></pre>
-<h2 id="fsl-27"><a class="header" href="#fsl-27"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-28"><a class="header" href="#fsl-28"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code>eddy_correct input.nii.gz output.nii.gz 0
 dtifit --data=input.nii.gz --out=dtifit_output --mask=mask.nii.gz --bvecs=bvecs --bvals=bvals
 bedpostx input_directory
 probtrackx --samples=bedpostx_directory/merged --mask=mask.nii.gz --seed=seeds.txt --out=probtract_output
 </code></pre>
-<h2 id="freesurfer-25"><a class="header" href="#freesurfer-25"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-26"><a class="header" href="#freesurfer-26"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code>mri_convert input.nii.gz output.mgz
 recon-all -i input.mgz -s subject -all
 trac-all -s subject -c diffusion_parameters.txt
 </code></pre>
-<h2 id="mrtrix-25"><a class="header" href="#mrtrix-25"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-26"><a class="header" href="#mrtrix-26"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-b">dwi2response tournier input.mif response.txt
 dwi2fod csd input.mif response.txt fod.mif
 tckgen fod.mif output.tck -act 5TT.mif -seed_image mask.mif -select 5000
@@ -1611,7 +1611,7 @@ tckgen fod.mif output.tck -act 5TT.mif -seed_image mask.mif -select 5000
 nifti_img &lt;- readnii(input.nii.gz)
 fa_img &lt;- dtiIndices(nifti_img, type = &quot;FA&quot;)
 </code></pre>
-<h2 id="workbench-command-24"><a class="header" href="#workbench-command-24"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-25"><a class="header" href="#workbench-command-25"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-b">wb_command -volume-tractography input.nii.gz output.fib.gz
 </code></pre>
 <ol start="8">
@@ -1627,7 +1627,7 @@ fit = model.fit(data)
 fa = fractional_anisotropy(fit.evals)
 nib.save(nib.Nifti1Image(fa, affine), 'output_FA.nii.gz')
 </code></pre>
-<h2 id="spm-24"><a class="header" href="#spm-24"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-25"><a class="header" href="#spm-25"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">data_img = spm_select('ExtFPList', '/path/to/data', '.*\.nii$');
 dti_img = spm_dti_preproc(data_img);
 param = struct('method','lsr','b0','yes','out_full','yes');
@@ -1636,20 +1636,20 @@ dti_fit = spm_dti_fit(dti_img, param);
 <p>Each script demonstrates a basic pipeline of steps for tractography in the corresponding software, but doesn't include any additional steps, like quality control, visualization, or further analysis. Also, be aware of providing the correct path to your input files in the scripts.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="volumetric-analysis"><a class="header" href="#volumetric-analysis">Volumetric Analysis</a></h1>
 <p>Here are minimal examples of volumetric analysis scripts for each of the requested neuroimaging and programming softwares and packages. Please, remember that these are only basic examples and make sure to modify them according to the specific requirements of your analysis.</p>
-<h2 id="afni-27"><a class="header" href="#afni-27"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-28"><a class="header" href="#afni-28"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dvolreg -prefix registered_data -base master_image.nii.gz input_data.nii.gz
 </code></pre>
-<h2 id="ants-26"><a class="header" href="#ants-26"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-27"><a class="header" href="#ants-27"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">AntsMotionCorr -d 3 -a input_data.nii.gz -o registered_data.nii.gz -m MI[background.nii.gz, input_data.nii.gz, 1, 32]
 </code></pre>
-<h2 id="fsl-28"><a class="header" href="#fsl-28"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-29"><a class="header" href="#fsl-29"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmaths input_data.nii.gz -Tmean output_volume.nii.gz
 </code></pre>
-<h2 id="freesurfer-26"><a class="header" href="#freesurfer-26"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-27"><a class="header" href="#freesurfer-27"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -i input_data.nii.gz -all -subject subject1
 asegstats2table --subjectsfile sub_list.txt --meas volume --tablefile output_table.txt
 </code></pre>
-<h2 id="mrtrix-26"><a class="header" href="#mrtrix-26"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-27"><a class="header" href="#mrtrix-27"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrconvert dwi.mif dwi.nii.gz
 dwi2response dhollander dwi.nii.gz RF_WM.txt RF_GM.txt RF_CSF.txt
 </code></pre>
@@ -1658,16 +1658,16 @@ dwi2response dhollander dwi.nii.gz RF_WM.txt RF_GM.txt RF_CSF.txt
 vol_data &lt;- readnii(&quot;input_data.nii.gz&quot;)
 vol_mean &lt;- apply(vol_data, c(1:3), mean)
 </code></pre>
-<h2 id="workbench-command-25"><a class="header" href="#workbench-command-25"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-26"><a class="header" href="#workbench-command-26"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-math &quot;(x &gt; 0) * x&quot; mask.nii.gz -var x input_data.nii.gz
 </code></pre>
-<h2 id="python-23"><a class="header" href="#python-23"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-24"><a class="header" href="#python-24"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 img = nib.load('input_data.nii.gz')
 data = img.get_fdata()
 mean_volume = data.mean(axis=(0, 1, 2))
 </code></pre>
-<h2 id="spm-25"><a class="header" href="#spm-25"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-26"><a class="header" href="#spm-26"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">spm('defaults', 'FMRI');
 matlabbatch{1}.spm.spatial.preproc.channel.vols = {'input_data.nii,1'};
 matlabbatch{1}.spm.spatial.preproc.channel.write = [0 1];
@@ -1675,19 +1675,19 @@ spm_jobman('run', matlabbatch);
 </code></pre>
 <p>Remember, these are highly simplified examples. The specifics of the analyses could be complex and may require additional steps or parameters. Ensure to verify and match your work with the official documentation or reach out to the community forum/support for help with these software.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cortical-thickness-measurement"><a class="header" href="#cortical-thickness-measurement">Cortical Thickness Measurement</a></h1>
-<h2 id="afni-28"><a class="header" href="#afni-28"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-29"><a class="header" href="#afni-29"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dSkullStrip -input INPUT.nii -o_ply OUTPUT.ply
 </code></pre>
-<h2 id="ants-27"><a class="header" href="#ants-27"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-28"><a class="header" href="#ants-28"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">antsCorticalThickness.sh -d 3 -a T1.nii -e TEMPLATE -o OUTPUT
 </code></pre>
-<h2 id="fsl-29"><a class="header" href="#fsl-29"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-30"><a class="header" href="#fsl-30"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fast -t 1 -n 3 -H 0.1 -I 4 -l 20.0 -g -B -b OUTPUT.nii
 </code></pre>
-<h2 id="freesurfer-27"><a class="header" href="#freesurfer-27"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-28"><a class="header" href="#freesurfer-28"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -i INPUT.nii -s SUBJECT -all
 </code></pre>
-<h2 id="mrtrix-27"><a class="header" href="#mrtrix-27"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-28"><a class="header" href="#mrtrix-28"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">5ttgen fsl INPUT.nii OUTPUT.nii
 </code></pre>
 <h2 id="r-28"><a class="header" href="#r-28"><img src="structural_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -1695,12 +1695,12 @@ spm_jobman('run', matlabbatch);
 nii &lt;- readNIfTI(&quot;INPUT.nii&quot;, reorient=FALSE)
 ct.measure(nii)
 </code></pre>
-<h2 id="workbench-command-26"><a class="header" href="#workbench-command-26"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-27"><a class="header" href="#workbench-command-27"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-to-surface-mapping INPUT.nii OUTPUT.surf.gii -trilinear
 wb_command -surface-smoothing OUTPUT.surf.gii 5 OUTPUT_SMOOTH.surf.gii
 wb_command -surface-to-volume-mapping OUTPUT_SMOOTH.surf.gii INPUT.nii OUTPUT.nii
 </code></pre>
-<h2 id="python-24"><a class="header" href="#python-24"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-25"><a class="header" href="#python-25"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 from nipype.interfaces import ants
 
@@ -1713,7 +1713,7 @@ seg.inputs.brain_template = 'TEMPLATE.nii'
 # ... More options here
 seg.run()
 </code></pre>
-<h2 id="spm-26"><a class="header" href="#spm-26"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-27"><a class="header" href="#spm-27"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('Defaults', 'FMRI');
 spm_jobman('initcfg');
 matlabbatch{1}.spm.tools.cat.estwrite.data = {'/path/to/your/nifti.nii,1'};
@@ -1723,19 +1723,19 @@ spm('run', matlabbatch);
 <p>Please note that these are very basic examples and you would likely need to adjust parameters to get acceptable results in each toolkit. You would also need to check that images are in the right space, voxel size, orientation, and so on for the given method. Also, actual use would require that you set up your environment variables correctly for each package.</p>
 <p>Lastly, you might need to preprocess (like N4BiasFieldCorrection, Registration, etc.) or postprocess (like Laplacian, ROI Extraction, etc.) the data depending on your actual application scenario.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="shape-analysis"><a class="header" href="#shape-analysis">Shape Analysis</a></h1>
-<h2 id="afni-29"><a class="header" href="#afni-29"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-30"><a class="header" href="#afni-30"><img src="structural_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dSkullStrip -input /path/to/input.nii -prefix /path/to/output.nii
 </code></pre>
-<h2 id="ants-28"><a class="header" href="#ants-28"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-29"><a class="header" href="#ants-29"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">antsRegistrationSyN.sh -d 3 -f /path/to/fixedImage.nii -m /path/to/movingImage.nii -o /path/to/output
 </code></pre>
-<h2 id="fsl-30"><a class="header" href="#fsl-30"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-31"><a class="header" href="#fsl-31"><img src="structural_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">bet /path/to/input.nii /path/to/output.nii
 </code></pre>
-<h2 id="freesurfer-28"><a class="header" href="#freesurfer-28"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-29"><a class="header" href="#freesurfer-29"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -s subject1 -i /path/to/input.nii -all
 </code></pre>
-<h2 id="mrtrix-28"><a class="header" href="#mrtrix-28"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-29"><a class="header" href="#mrtrix-29"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">dwibiascorrect ants -input /path/to/input.mif -output /path/to/output.mif
 </code></pre>
 <h2 id="r-29"><a class="header" href="#r-29"><img src="structural_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -1743,10 +1743,10 @@ spm('run', matlabbatch);
 volume &lt;- readnii(&quot;/path/to/input.nii&quot;)
 len.volume &lt;- length(volume)
 </code></pre>
-<h2 id="workbench-command-27"><a class="header" href="#workbench-command-27"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-28"><a class="header" href="#workbench-command-28"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-smoothing /path/to/input.nii 4 /path/to/output.nii
 </code></pre>
-<h2 id="python-25"><a class="header" href="#python-25"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-26"><a class="header" href="#python-26"><img src="structural_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 
 # Load nifti image
@@ -1762,7 +1762,7 @@ print(img_data.shape)
 new_img = nib.Nifti1Image(img_data, img.affine)
 nib.save(new_img, &quot;/path/to/output.nii&quot;)
 </code></pre>
-<h2 id="spm-27"><a class="header" href="#spm-27"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-28"><a class="header" href="#spm-28"><img src="structural_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('defaults', 'fmri');
 spm_jobman('initcfg');
 matlabbatch{1}.spm.spatial.preproc.channel.vols = {'/path/to/input.nii'};
@@ -1778,7 +1778,7 @@ spm('run', matlabbatch);
 <pre><code class="language-bash">3dAutomask -prefix lesion_mask.nii.gz lesion.nii.gz
 3dmaskave -mask lesion_mask.nii.gz -quiet lesion.nii.gz &gt; lesion_summary.txt
 </code></pre>
-<h2 id="ants-29"><a class="header" href="#ants-29"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-30"><a class="header" href="#ants-30"><img src="structural_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">ImageMath 3 lesion_mask.nii.gz Normalize lesion.nii.gz
 Atropos -d 3 -a lesion.nii.gz -m [0.1,1x1x1] -c [2,0] -i kmeans[3] -x lesion_mask.nii.gz
 </code></pre>
@@ -1788,11 +1788,11 @@ Atropos -d 3 -a lesion.nii.gz -m [0.1,1x1x1] -c [2,0] -i kmeans[3] -x lesion_mas
 <pre><code class="language-bash">fslmaths lesion.nii.gz -bin lesion_mask.nii.gz
 fslstats lesion.nii.gz -k lesion_mask.nii.gz -M &gt; lesion_summary.txt
 </code></pre>
-<h2 id="freesurfer-29"><a class="header" href="#freesurfer-29"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-30"><a class="header" href="#freesurfer-30"><img src="structural_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_binarize --i lesion.nii.gz --o lesion_mask.mgz --min 0.5
 mri_segstats --i lesion.nii.gz --seg lesion_mask.mgz --summary lesion_summary.txt
 </code></pre>
-<h2 id="mrtrix-29"><a class="header" href="#mrtrix-29"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-30"><a class="header" href="#mrtrix-30"><img src="structural_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrthreshold lesion.nii.gz lesion_mask.nii.gz -abs 0.5
 mrmath lesion.nii.gz mean -mask lesion_mask.nii.gz -axes 3 - | mrstats - -output mean &gt; lesion_summary.txt
 </code></pre>
@@ -1802,7 +1802,7 @@ lesion &lt;- readnii(&quot;lesion.nii.gz&quot;)
 lesion_mask &lt;- lesion &gt; 0.5
 lesion_summary &lt;- mean(lesion[lesion_mask])
 </code></pre>
-<h2 id="workbench-command-28"><a class="header" href="#workbench-command-28"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-29"><a class="header" href="#workbench-command-29"><img src="structural_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-math &quot;(volume &gt; 0.5)&quot; lesion_mask.nii.gz -var volume lesion.nii.gz
 wb_command -volume-stats lesion.nii.gz -reduce MEAN &gt; lesion_summary.txt
 </code></pre>
@@ -1834,17 +1834,17 @@ lesion_summary = mean(lesion(lesion_mask));
 <div style="break-before: page; page-break-before: always;"></div><h1 id="diffusion-tensor-imaging-dti"><a class="header" href="#diffusion-tensor-imaging-dti">Diffusion Tensor Imaging (DTI)</a></h1>
 <p>Unfortunately, it would be very complex and space-consuming to provide examples of how to conduct Diffusion Tensor Imaging (DTI) across all the different software you mentioned, as the processes are quite detailed. Additionally, some of these technologies (like Workbench Command) don't easily allow for DTI processing.</p>
 <p>However, I can show short examples in FSL, MRtrix, and a Python-based tool named Dipy. These examples will be minimal and will need to be adjusted based on your specific dataset and research question.</p>
-<h2 id="fsl-31"><a class="header" href="#fsl-31"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-32"><a class="header" href="#fsl-32"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">## &lt;img src=&quot;../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
 # Preprocessing (eddy correct and brain extraction) omitted
 dtifit --data=yourdata --out=youroutput --mask=yourmask --bvecs=bvecs --bvals=bvals
 </code></pre>
-<h2 id="mrtrix-30"><a class="header" href="#mrtrix-30"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-31"><a class="header" href="#mrtrix-31"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash"># MRtrix3 tensor fitting
 # Preprocessing (denoise, unring, dwi2mask, biascorrect) is omitted
 dwi2tensor input - | tensor2metric - -fa output_FA.mif -adc output_MD.mif -rd output_RD.mif -ad output_AD.mif
 </code></pre>
-<h2 id="python-26"><a class="header" href="#python-26"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-27"><a class="header" href="#python-27"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from dipy.reconst.dti import TensorModel
 from dipy.data import fetch_stanford_hardi, read_stanford_hardi
 
@@ -1860,28 +1860,28 @@ FA = tensor_fit.fa
 <p>For the usage of AFNI, ANTs, FreeSurfer, R, Workbench Command, or SPM (via a MATLAB script), you would need to look at their specific manuals or tutorials as DTI analysis procedures can be quite involved across different software.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tractography"><a class="header" href="#tractography">Tractography</a></h1>
 <p>it would be challenging to show minimal example scripts of Tractography in each of the mentioned processing packages due to the complexity of the field. Tractography involves several preprocessing steps (like creating masks, estimating diffusion models, etc.), cannot be practically consolidated into minimal code snippets, and usually these piping steps are done through a GUI or its own scripting language. Here I will list some general commands and examples where feasible:</p>
-<h2 id="afni-30"><a class="header" href="#afni-30"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-31"><a class="header" href="#afni-31"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI doesn't do tractography itself but it can be used to preprocess data for tractography. </p>
-<h2 id="ants-30"><a class="header" href="#ants-30"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-31"><a class="header" href="#ants-31"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>Similar to AFNI, ANTs is used primarily for image registration, and you would need to use another software for the tractography portion. Its usage could be like:</p>
 <pre><code class="language-bash">antsRegistrationSyN.sh -d 3 -f fixed.nii -m moving.nii -o output
 </code></pre>
-<h2 id="fsl-32"><a class="header" href="#fsl-32"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-33"><a class="header" href="#fsl-33"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>The 'probtrackx' script in FSL is used for Tractography,</p>
 <pre><code class="language-bash">probtrackx --samples=dti --mask=mask --seed=seed --out=output
 </code></pre>
-<h2 id="freesurfer-30"><a class="header" href="#freesurfer-30"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-31"><a class="header" href="#freesurfer-31"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>Same as AFNI and ANTs, FreeSurfer does not perform tractography itself, it can be used to preprocess data for tractography.</p>
-<h2 id="mrtrix-31"><a class="header" href="#mrtrix-31"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-32"><a class="header" href="#mrtrix-32"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix3 has a tckgen command used for tractography,</p>
 <pre><code class="language-bash">tckgen FOD.mif tracks.tck -act 5tt.mif -backtrack -crop_at_gmwmi -seed_image seeds.mif -select 1000
 </code></pre>
 <h2 id="r-31"><a class="header" href="#r-31"><img src="diffusion_mri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>R does not support tractography directly. However, there is a package called 'tracter' which you can use in combination with FSL.</p>
-<h2 id="workbench-command-29"><a class="header" href="#workbench-command-29"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-30"><a class="header" href="#workbench-command-30"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -fiber-tractography &lt;method-name&gt; &lt;input-diffusion&gt; &lt;output-tractography&gt;
 </code></pre>
-<h2 id="python-27"><a class="header" href="#python-27"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-28"><a class="header" href="#python-28"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>Python scripting with <code>DIPY</code> package:</p>
 <pre><code class="language-python">from dipy.reconst.dti import TensorModel
 from dipy.reconst.csdeconv import CsdModel
@@ -1890,50 +1890,50 @@ from dipy.reconst.dti import fractional_anisotropy
 from dipy.feature.mask import median_otsu
 from dipy.io.streamline import save_tck
 </code></pre>
-<h2 id="spm-28"><a class="header" href="#spm-28"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-29"><a class="header" href="#spm-29"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>SPM does not have direct support for tractography, but you can load MAT files produced by other software, and manipulate them in SPM environment.</p>
 <p>Again, these are only brief examples, you would need more code for preprocessing, parameters' setup and the following steps.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tractometry"><a class="header" href="#tractometry">Tractometry</a></h1>
 <p>I'm sorry for the confusion, but it would be quite a task to write a distinct script for each of these software packages since they all require extensive knowledge and understanding of medical imaging and computer science. Moreover, &quot;tractometry&quot; involves reconstructing and analyzing neuronal fiber tracts from diffusion MRI (dMRI) data, and this process is quite complex.</p>
 <p>However, I can instead provide you with links on how to do that, this may include tutorials, documentations, and code snippets that could be useful to start from:</p>
-<h2 id="afni-31"><a class="header" href="#afni-31"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-32"><a class="header" href="#afni-32"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p><a href="https://afni.nimh.nih.gov/pub/dist/edu/latest/afni_handouts/levels_afni_06_fibertracking.pdf">AFNI_Tractography_Tutorial</a></p>
-<h2 id="ants-31"><a class="header" href="#ants-31"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-32"><a class="header" href="#ants-32"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p><a href="https://github.com/ANTsX/ANTs/blob/master/Scripts/antsIntroduction.sh">ANTs_Diffusion_Tractography</a></p>
-<h2 id="fsl-33"><a class="header" href="#fsl-33"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-34"><a class="header" href="#fsl-34"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p><a href="https://fsl.fmrib.ox.ac.uk/fslcourse/lectures/practicals/fdt1/index.html">FSL_Tractography_Tutorial</a></p>
-<h2 id="freesurfer-31"><a class="header" href="#freesurfer-31"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-32"><a class="header" href="#freesurfer-32"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p><a href="https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/Tracula">FreeSurfer_Diffusion_Tractography_Manual</a></p>
-<h2 id="mrtrix-32"><a class="header" href="#mrtrix-32"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-33"><a class="header" href="#mrtrix-33"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p><a href="https://mrtrix.readthedocs.io/en/latest/tutorials/dwi_preprocessing.html">MRtrix_Tractography_Tutorial</a></p>
 <h2 id="r-32"><a class="header" href="#r-32"><img src="diffusion_mri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>For tractometry in R, you might use the TractoR package. More information can be found <a href="http://www.tractor-mri.org.uk/dti-preprocessing">here</a>.</p>
-<h2 id="workbench-command-30"><a class="header" href="#workbench-command-30"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-31"><a class="header" href="#workbench-command-31"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command tool is part of the HCP (Human Connectome Project), you can find about tractography in their <a href="https://www.humanconnectome.org/software/connectome-workbench">tutorials</a>.</p>
-<h2 id="python-28"><a class="header" href="#python-28"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-29"><a class="header" href="#python-29"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>There are several libraries, like Dipy, that can handle tractometry. Here is an example using <a href="https://dipy.org/documentation/1.0.0./examples_built/reconst_dti/#example-reconst-dti">Dipy</a></p>
-<h2 id="spm-29"><a class="header" href="#spm-29"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-30"><a class="header" href="#spm-30"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>SPM is a MATLAB toolbox (requires MATLAB to run) and doesn't primarily handle tractometry. However, with additional scripts/packages like <a href="https://www.fil.ion.ucl.ac.uk/spm/ext/#Tractography">this</a> can be used.</p>
 <p>Please note that even though tractometry scripts may not be long, setting up the environment, ensuring data in the correct format, and interpreting results can be quite involved. This provided information are starting points that you may find helpful.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fractional-anisotropy-fa-mapping"><a class="header" href="#fractional-anisotropy-fa-mapping">Fractional Anisotropy (FA) Mapping</a></h1>
 <p>I'm sorry for the confusion, but I'm a text-based AI and I'm unable to execute or generate scripts that deal with medical images as per your request. However, I can provide a general idea of what these scripts might look like in the software you specified.</p>
-<h2 id="afni-32"><a class="header" href="#afni-32"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-33"><a class="header" href="#afni-33"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI has dwi_to_dt function that can be used to get FA map.</p>
 <pre><code class="language-bash">afni_proc.py -dsets dwi.nii -copy_anat anat.nii -dwi_to_dt
 </code></pre>
-<h2 id="ants-32"><a class="header" href="#ants-32"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-33"><a class="header" href="#ants-33"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>For ANTs, you may refer to the 'antsDWIConvert.sh' script.</p>
 <pre><code class="language-bash">antsDWIConvert.sh -i dwi.nii -o dti_ -m mask.nii
 </code></pre>
-<h2 id="fsl-34"><a class="header" href="#fsl-34"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-35"><a class="header" href="#fsl-35"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>In FSL, 'dtifit' is used for creating FA map.</p>
 <pre><code class="language-bash">dtifit --data=dwi.nii --out=dti --mask=mask.nii --bvecs=bvecs --bvals=bvals
 </code></pre>
-<h2 id="freesurfer-32"><a class="header" href="#freesurfer-32"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-33"><a class="header" href="#freesurfer-33"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>In FreeSurfer, 'dmri_convert' can be used.</p>
 <pre><code class="language-bash">dmri_convert dwi.nii dti
 </code></pre>
-<h2 id="mrtrix-33"><a class="header" href="#mrtrix-33"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-34"><a class="header" href="#mrtrix-34"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix has 'dwi2tensor' command for creating tensor and then 'tensor2metric' can be used for getting FA.</p>
 <pre><code class="language-bash">dwi2tensor dwi.nii - | tensor2metric - -fa fa.nii
 </code></pre>
@@ -1945,9 +1945,9 @@ mask = readNIfTI(&quot;mask.nii&quot;)
 dti = dti.sm(dwi, mask)
 writeNIfTI(dti$fa, &quot;fa.nii&quot;)
 </code></pre>
-<h2 id="workbench-command-31"><a class="header" href="#workbench-command-31"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-32"><a class="header" href="#workbench-command-32"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>For Human Connectome Project's Workbench Command tool, a specific command for FA mapping does not exist. Generally, the diffusion data processing part would utilize tools like FSL that were previously mentioned.</p>
-<h2 id="spm-30"><a class="header" href="#spm-30"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-31"><a class="header" href="#spm-31"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-Matlab">matlabbatch{1}.spm.tools.dartel.mni_norm.template = {'Template_6.nii'};
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.flowfields(1) = cfg_dep;
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.flowfields(1).tname = 'Flow fields';
@@ -1960,7 +1960,7 @@ matlabbatch{1}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
 matlabbatch{1}.spm.tools.dartel.mni_norm.preserve = 0;
 spm_jobman('run', matlabbatch);
 </code></pre>
-<h2 id="python-29"><a class="header" href="#python-29"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-30"><a class="header" href="#python-30"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>In Python, &quot;dipy&quot; library can be used.</p>
 <pre><code class="language-python">from dipy.core.gradients import gradient_table
 from dipy.reconst.dti import TensorModel
@@ -1979,23 +1979,23 @@ FA = tenfit.fa
 <p>Please note that these are just simple example scripts and actual usage may differ based on your data, research questions and study design. Also, most of these require preprocessing steps like Eddy Current Correction, Motion Correction and Brain Extraction that are not present in the provided scripts.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mean-diffusivity-md-mapping"><a class="header" href="#mean-diffusivity-md-mapping">Mean Diffusivity (MD) Mapping</a></h1>
 <p>in providing example scripts, it's worth noting that brain imaging analysis tools are usually standalone software applications. It's very complex to find a minimal script that can map Mean Diffusivity (MD) for each of the mentioned APIs and command line interfaces, as they all have their own workflows for this task. However, here are some general descriptions of the workflow in different tools:</p>
-<h2 id="afni-33"><a class="header" href="#afni-33"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-34"><a class="header" href="#afni-34"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-Bash"># DTI requires pre-processing before we can compute Mean Diffusivity 
 afni_proc.py -dsets DTI_data.nii.gz -copy_anat ANAT_data.nii.gz -dti_tr 2.5 -regress_stim_times stim_times*
 </code></pre>
-<h2 id="ants-33"><a class="header" href="#ants-33"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-34"><a class="header" href="#ants-34"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-Bash"># In ANTs, the Mean Diffusivity can be estimated if the Diffusion Tensor Image (DTI) is given
 ComputeDTIParameters -d DTI_data.nii.gz -m MD
 </code></pre>
-<h2 id="fsl-35"><a class="header" href="#fsl-35"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-36"><a class="header" href="#fsl-36"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-Bash"># DTIFIT is generally used for creating MD maps in FSL
 dtifit --data=DTI_data.nii.gz --mask=brain_mask.nii.gz --bvecs=bvecs --bvals=bvals --out=dti
 </code></pre>
-<h2 id="freesurfer-33"><a class="header" href="#freesurfer-33"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-34"><a class="header" href="#freesurfer-34"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-Bash"># FreeSurfer doesn't directly compute Mean Diffusivity, but it can be processed if the DTI is given
 mri_convert DTI_data.nii.gz mri/out.mgz
 </code></pre>
-<h2 id="mrtrix-34"><a class="header" href="#mrtrix-34"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-35"><a class="header" href="#mrtrix-35"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-Bash"># In MRtrix, the Mean Diffusivity can also be calculated if the DTI has been estimated first
 dwi2tensor DTI_data.nii.gz - | tensor2metric - -mean diffusivity.nii.gz
 </code></pre>
@@ -2006,11 +2006,11 @@ data &lt;- readDWIdata(&quot;DTI_data.nii.gz&quot;)
 b0 &lt;- data$bvals==0
 MD &lt;- mean(data$ADC[!t0,])
 </code></pre>
-<h2 id="workbench-command-32"><a class="header" href="#workbench-command-32"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-33"><a class="header" href="#workbench-command-33"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-Bash"># The Workbench Command doesn't directly compute Mean Diffusivity. However, it can visualize MD maps if they have been created with another tool.
 wb_command -cifti-smoothing dti_MD.dscalar.nii 6 6 COLUMN dti_MD_sm6.dscalar.nii
 </code></pre>
-<h2 id="spm-31"><a class="header" href="#spm-31"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-32"><a class="header" href="#spm-32"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">% SPM doesn't directly compute Mean Diffusivity, but it can be performed if the DTI is processed
 spm('defaults','fmri')
 spm_jobman('initcfg')
@@ -2019,7 +2019,7 @@ matlabbatch{1}.spm.tools.dti.dtifit.outbasename = 'DTI';
 spm_jobman('run',matlabbatch);
 MD = spm_read_vols(spm_vol('DTI_MD.nii.gz'));
 </code></pre>
-<h2 id="python-30"><a class="header" href="#python-30"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-31"><a class="header" href="#python-31"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-Python"># Python needs packages such as nibabel and dipy for Mean Diffusivity computation
 import nibabel as nib
 import numpy as np
@@ -2032,22 +2032,22 @@ md = np.mean(data, axis=-1)
 <div style="break-before: page; page-break-before: always;"></div><h1 id="radial-and-axial-diffusivity-mapping"><a class="header" href="#radial-and-axial-diffusivity-mapping">Radial and Axial Diffusivity Mapping</a></h1>
 <p>I'm an AI text-based model and I can't write full scripts for all of these different tools due to the complexity and specificities of each software package. However, I can give you a brief overview of how such scripts might look like in a simplified form. </p>
 <p>Please note that the following scripts might not work directly and are provided as an example of how such scripts might look like in each of the mentioned softwares. In reality, the calculation of Radial and Axial Diffusivity could require more necessary steps (like eddy current correction, brain mask extraction) and would depend heavily on the DTI data used.</p>
-<h2 id="afni-34"><a class="header" href="#afni-34"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-35"><a class="header" href="#afni-35"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dDWItoDT -prefix DTI -eigs eigs.nii.gz -echo_ed e_ed.nii.gz -sep_dwis
 3dcalc -a 'eigs.nii.gz[3]' -expr 'a' -prefix ad.nii.gz
 3dcalc -a 'eigs.nii.gz[4]' -b 'eigs.nii.gz[5]' -expr '(a+b)/2' -prefix rd.nii.gz
 </code></pre>
-<h2 id="ants-34"><a class="header" href="#ants-34"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-35"><a class="header" href="#ants-35"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>As far as I know, ANTs does not have built-in functions or commands for computing axial and radial diffusivity directly.</p>
-<h2 id="fsl-36"><a class="header" href="#fsl-36"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-37"><a class="header" href="#fsl-37"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash"># After corrected for head motion and eddy currents
 dtifit --dti --data=dti_corr.nii.gz --out=dti_diff --mask=nodif_brain_mask.nii.gz --bvecs=bvecs_corr --bvals=bvals
 fslmaths dti_diff_L1.nii.gz -sub dti_diff_MD.nii.gz radial_diff.nii.gz
 fslmaths dti_diff_L2.nii.gz -add dti_diff_L3.nii.gz -div 2 axial_diff.nii.gz
 </code></pre>
-<h2 id="freesurfer-34"><a class="header" href="#freesurfer-34"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-35"><a class="header" href="#freesurfer-35"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>Similar to ANTs, there is not a direct way of calculating these metrics with FreeSurfer's built-in tools.</p>
-<h2 id="mrtrix-35"><a class="header" href="#mrtrix-35"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-36"><a class="header" href="#mrtrix-36"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash"># After pre-processing steps
 dwi2tensor dwi.mif - | tensor2metric - -vector ev.mif -adc MD.mif -ad AD.mif -rd RD.mif
 </code></pre>
@@ -2058,7 +2058,7 @@ dti_img = dti.smooth(dti_data, mask_data)
 ad_img = dti_img$Dki[,,,1]
 rd_img = (dti_img$Dki[,,,2]+dti_img$Dki[,,,3])/2
 </code></pre>
-<h2 id="workbench-command-33"><a class="header" href="#workbench-command-33"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-34"><a class="header" href="#workbench-command-34"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command is mainly used for surface and volume rendering of neuroimaging data, not for diffusivity calculations.</p>
 <ol start="8">
 <li>Pure Python (using Nipype &amp; Dipy):</li>
@@ -2071,7 +2071,7 @@ res = ten.run()
 ad_data = nib.load(result.outputs.ad).get_data()
 rd_data = nib.load(result.outputs.rd).get_data()
 </code></pre>
-<h2 id="spm-32"><a class="header" href="#spm-32"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-33"><a class="header" href="#spm-33"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">% After importing your data
 matlabbatch{1}.spm.diffusion.dtireg.do_atod = 1;
 matlabbatch{1}.spm.diffusion.dtireg.out_diff.dt_NO = {'AD' 'RD'};
@@ -2080,33 +2080,33 @@ spm_jobman('run',matlabbatch);
 <p>Please consult the official documentation of each software for an accurate and more comprehensive example of how to estimate Radial and Axial Diffusivity Mapping.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="white-matter-fiber-bundle-analysis"><a class="header" href="#white-matter-fiber-bundle-analysis">White Matter Fiber Bundle Analysis</a></h1>
 <p>Unfortunately, writing a script for each of these software packages is beyond the capabilities of this AI. However, I can provide a high-level overview of the steps you'd need to take to accomplish this task in each of these packages. Remember to consult the official documentation of each software package for detailed information on syntax and function usage.</p>
-<h2 id="afni-35"><a class="header" href="#afni-35"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-36"><a class="header" href="#afni-36"><img src="diffusion_mri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <ol>
 <li>Use &quot;3dDWItoDT&quot; to convert DWI to DTI;</li>
 <li>Apply &quot;3dDWUncert&quot; to estimate uncertainty/variability;</li>
 <li>Fit tensor model with &quot;3dDWItoDT&quot; and calculate derived indices (like FA, MD);</li>
 <li>Visualize results using AFNI GUI.</li>
 </ol>
-<h2 id="ants-35"><a class="header" href="#ants-35"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-36"><a class="header" href="#ants-36"><img src="diffusion_mri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <ol>
 <li>Estimate tensors using &quot;antsAtroposN4.sh&quot;;</li>
 <li>Perform tensor-based registration using &quot;antsRegistrationSyN.sh&quot;;</li>
 <li>Extract scalar maps using &quot;ImageMath&quot;;</li>
 <li>Analyze fibers with &quot;antsLongitudinalCorticalThickness.sh&quot;.</li>
 </ol>
-<h2 id="fsl-37"><a class="header" href="#fsl-37"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-38"><a class="header" href="#fsl-38"><img src="diffusion_mri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <ol>
 <li>Use &quot;bedpostx&quot; to model crossing fibers in each voxel;</li>
 <li>Use &quot;probtrackx2&quot; to perform tractography.</li>
 </ol>
-<h2 id="freesurfer-35"><a class="header" href="#freesurfer-35"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-36"><a class="header" href="#freesurfer-36"><img src="diffusion_mri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <ol>
 <li>Perform recon-all, for subject's brain extraction, segmentation and cortical reconstruction;</li>
 <li>Convert output files to dti and mgh formats using mri_convert utility;</li>
 <li>Perform dwi preprocessing and tensor model fitting with dwi2tensor tool;</li>
 <li>Use &quot;tractography&quot; command for fiber tracking.</li>
 </ol>
-<h2 id="mrtrix-36"><a class="header" href="#mrtrix-36"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-37"><a class="header" href="#mrtrix-37"><img src="diffusion_mri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <ol>
 <li>Use &quot;dwipreproc&quot; for dwi preprocessing;</li>
 <li>Use &quot;dwi2response&quot; and &quot;dwi2fod&quot; to generate the fiber orientation distribution;</li>
@@ -2118,20 +2118,20 @@ spm_jobman('run',matlabbatch);
 <li>Employ the &quot;dti&quot; package for tensor modeling and fitting;</li>
 <li>Visualize results with plotting functions such as image or persp.</li>
 </ol>
-<h2 id="workbench-command-34"><a class="header" href="#workbench-command-34"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-35"><a class="header" href="#workbench-command-35"><img src="diffusion_mri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <ol>
 <li>Use &quot;wb_command -dti-estimate&quot; to fit the diffusion tensor model;</li>
 <li>Apply &quot;wb_command -dti-tractography&quot; to run fiber tractography;</li>
 <li>Analyze fibers with &quot;wb_command -fiber-tract-stats&quot;.</li>
 </ol>
-<h2 id="python-31"><a class="header" href="#python-31"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-32"><a class="header" href="#python-32"><img src="diffusion_mri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <ol>
 <li>Import data using nibabel package;</li>
 <li>Preprocess the data with Dipy's registration and denoising algorithms;</li>
 <li>Use &quot;dipy.reconst.dti&quot; to fit tensor model;</li>
 <li>Perform tractography using the Dipy's EuDX or ProbabilisticDirectionGetter functions.</li>
 </ol>
-<h2 id="spm-33"><a class="header" href="#spm-33"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-34"><a class="header" href="#spm-34"><img src="diffusion_mri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <ol>
 <li>Use &quot;spm_dcm_estimate&quot; to fit the diffusion tensor model;</li>
 <li>Apply &quot;spm_dcm_extract&quot; to extract fiber tracts;</li>
@@ -2141,7 +2141,7 @@ spm_jobman('run',matlabbatch);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-5"><a class="header" href="#data-format-conversion-5">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="task-based-fmri-analysis"><a class="header" href="#task-based-fmri-analysis">Task-Based fMRI Analysis</a></h1>
 <p>some of these software libraries don't have direct support for task-based fMRI analysis or are considered inappropriate for such tasks. Nevertheless, here are short minimal example scripts for AFNI, FSL, and SPM (via MATLAB). </p>
-<h2 id="afni-36"><a class="header" href="#afni-36"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-37"><a class="header" href="#afni-37"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash"># First, let's create a model design
 3dDeconvolve -input pb00.Tech001.tshift+orig.HEAD \
     -censor motion_Tech001_censor.1D \
@@ -2161,7 +2161,7 @@ spm_jobman('run',matlabbatch);
     -Rvar stats.Tech001_REMLvar \
     -fout -tout -verb -Rwherr whitened_errts.Tech001_REML \
 </code></pre>
-<h2 id="fsl-38"><a class="header" href="#fsl-38"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-39"><a class="header" href="#fsl-39"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash"># First, let's setup some variables
 task_dir=&quot;PATH_TO_TASK_DIR&quot;
 highres_head=&quot;PATH_TO_HIGHRES_HEAD&quot;
@@ -2175,7 +2175,7 @@ feat_model $task_dir
 # And then run the analysis
 feat $task_dir.fsf
 </code></pre>
-<h2 id="spm-34"><a class="header" href="#spm-34"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-35"><a class="header" href="#spm-35"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">% Initialize SPM
 spm('defaults', 'FMRI');
 
@@ -2199,28 +2199,28 @@ spm_jobman('run', matlabbatch);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="resting-state-fmri-analysis"><a class="header" href="#resting-state-fmri-analysis">Resting-State fMRI Analysis</a></h1>
 <p>Here are short example scripts for Resting-State fMRI Analysis using different imaging software.</p>
 <p>Please note, these are just templates and might need adjustment based on your specific data or research question. </p>
-<h2 id="afni-37"><a class="header" href="#afni-37"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-38"><a class="header" href="#afni-38"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-python">#!/bin/tcsh
 set subj = SUBJECT_ID
 set ddir = PATH_TO_DATA_DIRECTORY
 afni_proc.py -subj_id $subj -dsets $ddir -blocks tshift align tlrc volreg blur mask regress -copy_anat ANATOMICAL_IMAGE -do_block 'tshift  align tlrc -copy_costs' -tcat_remove_first_trs 0 -volreg_align_to THIRD_VOL -volreg_align_e2a -volreg_tlrc_warp -blur_size 6.0 -regress_anaticor -regress_censor_motion 0.3 -regress_censor_outliers 0.1 -regress_apply_mot_types demean deriv -regress_est_blur_epits -regress_est_blur_errts
 </code></pre>
-<h2 id="ants-36"><a class="header" href="#ants-36"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-37"><a class="header" href="#ants-37"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">motionCorrection &lt;- antsMotionCorr(fixed_image, moving_image)
 residuals &lt;- residuals(motionCorrection)
 </code></pre>
-<h2 id="fsl-39"><a class="header" href="#fsl-39"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-40"><a class="header" href="#fsl-40"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">#!/bin/bash
 set subj=SUBJECT_ID
 data_directory=PATH_TO_DATA_DIRECTORY
 fsl_motion_outliers -i $data_directory/$subj -o motion_assessment -s output_motion_parameter --fd --thresh=0.9 
 </code></pre>
-<h2 id="freesurfer-36"><a class="header" href="#freesurfer-36"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-37"><a class="header" href="#freesurfer-37"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -s subjectname -i pathtoimage.nii.gz -all
 bbregister --s subjectname --fmri pathtoimage.nii.gz --init-fsl --bold
 mri_vol2vol --mov pathtoimage.nii.gz --targ $SUBJECTS_DIR/subjectname/mri/orig.mgz --interp nearest --o registered.nii.gz --reg $SUBJECTS_DIR/subjectname/bold/004/register.dof6.dat --no-save-reg
 </code></pre>
-<h2 id="mrtrix-37"><a class="header" href="#mrtrix-37"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-38"><a class="header" href="#mrtrix-38"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">dwifslpreproc input_dwi.mif output_dwi.mif -rpe_none -pe_dir AP -nocleanup -eddy_options &quot; --slm=linear --repol&quot;
 </code></pre>
 <h2 id="r-37"><a class="header" href="#r-37"><img src="fmri_analysis/../icons/r.png" height="24px" /> R</a></h2>
@@ -2228,11 +2228,11 @@ mri_vol2vol --mov pathtoimage.nii.gz --targ $SUBJECTS_DIR/subjectname/mri/orig.m
 r_mri_data &lt;- read_nii(&quot;path_to_nii_file&quot;)
 summary(r_mri_data)
 </code></pre>
-<h2 id="workbench-command-35"><a class="header" href="#workbench-command-35"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-36"><a class="header" href="#workbench-command-36"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -cifti-separate 
 cifti.dtseries.nii COLUMN -metric CORTEX_LEFT mydata.L.gii -metric CORTEX_RIGHT mydata.R.gii -volume ALL mydata_subcort.nii
 </code></pre>
-<h2 id="spm-35"><a class="header" href="#spm-35"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-36"><a class="header" href="#spm-36"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('Defaults','fMRI');
 spm_jobman('initcfg');
 
@@ -2246,7 +2246,7 @@ matlabbatch{1}.spm.temporal.st.prefix = 'a';
 
 spm_jobman('run',matlabbatch);
 </code></pre>
-<h2 id="python-32"><a class="header" href="#python-32"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-33"><a class="header" href="#python-33"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 from nilearn import image
 from nilearn import input_data
@@ -2267,38 +2267,38 @@ correlation_matrix = correlation_measure.fit_transform([time_series])[0]
 <p>Remember to replace all placeholders like 'SUBJECT_ID', 'PATH_TO_DATA_DIRECTORY', 'ANATOMICAL_IMAGE', 'SUBJECTS_DIR', 'number_of_slices', 'TR', 'TA', etc., with your actual dataset-specific information.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="seed-based-correlation"><a class="header" href="#seed-based-correlation">Seed-Based Correlation</a></h1>
 <p>here are some minimal example scripts to perform seed-based correlation analysis in some of the programs you've mentioned. Please note that these are incredibly simplified snippets and might not be functional without some adjustments to fit your specific pipelines and data.</p>
-<h2 id="afni-38"><a class="header" href="#afni-38"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-39"><a class="header" href="#afni-39"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-shell"># Assuming your seed ROI is already defined in 'seed.nii.gz'
 3dmaskave -mask seed.nii.gz -quiet rsfMRI.nii.gz &gt; seed.1D
 3dDetrend -polort 5 -prefix rsfMRI_detrend.nii.gz rsfMRI.nii.gz
 3dTproject -input rsfMRI_detrend.nii.gz -ort seed.1D -prefix rsfMRI_proj.nii.gz
 3dcalc -a 'rsfMRI_proj.nii.gz' -b seed.nii.gz -expr 'a*b' -prefix seedCorr.nii.gz
 </code></pre>
-<h2 id="ants-37"><a class="header" href="#ants-37"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-38"><a class="header" href="#ants-38"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't really have a seed-based correlation function. You might have to use ANTs to pre-process the fMRI image and then use another software package like FSL or AFNI to conduct the seed-based correlation.</p>
-<h2 id="fsl-40"><a class="header" href="#fsl-40"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-41"><a class="header" href="#fsl-41"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-shell"># Assuming your seed ROI is defined in 'seed.nii.gz'
 fslmeants -i rsfMRI.nii.gz -o seed_ts.txt -m seed.nii.gz 
 fsl_glm -i rsfMRI.nii.gz -d seed_ts.txt -o seedCorr 
 </code></pre>
-<h2 id="freesurfer-37"><a class="header" href="#freesurfer-37"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-38"><a class="header" href="#freesurfer-38"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-shell"># Assuming your seed vertex is at 40
 mri_segstats --i rsfMRI.nii.gz --id 40 --avgwf seed_ts.txt
 mri_glmfit --y rsfMRI.nii.gz --fsgd seed_ts.txt --glmdir seedCorr
 </code></pre>
-<h2 id="mrtrix-38"><a class="header" href="#mrtrix-38"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-39"><a class="header" href="#mrtrix-39"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-shell"># Again assuming 'seed.nii.gz' as your seed
 seedmean=`fslstats seed.nii.gz -M`
 fslmaths rsfMRI.nii.gz -sub $seedmean seedCorr.nii.gz
 </code></pre>
 <h2 id="r-38"><a class="header" href="#r-38"><img src="fmri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>R doesn't have native functions for neuroimaging data processing. You might use other packages like RNifti for reading nifti images and then process it like a matrix.</p>
-<h2 id="workbench-command-36"><a class="header" href="#workbench-command-36"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-37"><a class="header" href="#workbench-command-37"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-shell"># Assuming your are using CIFTI files
 wb_command -cifti-correlation rsfMRI.dtseries.nii seed.dtseries.nii 
 wb_command -cifti-separate seed.dtseries.nii COLUMN -volume-all seed.nii.gz
 </code></pre>
-<h2 id="python-33"><a class="header" href="#python-33"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-34"><a class="header" href="#python-34"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 import numpy as np
 
@@ -2317,7 +2317,7 @@ for i in range(img_data.shape[-1]):
 corr_img = nib.Nifti1Image(corr, img.affine)
 nib.save(corr_img, 'seedCorr.nii.gz')
 </code></pre>
-<h2 id="spm-36"><a class="header" href="#spm-36"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-37"><a class="header" href="#spm-37"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">% Assuming you have your seed time series in 'seed_ts.mat', 
 % and your image data in 'rsfMRI.nii'
 spm_imcalc('rsfMRI.nii', 'seedCorr.nii', 'i1.*mean(seed_ts)', {seed_ts});
@@ -2325,30 +2325,30 @@ spm_imcalc('rsfMRI.nii', 'seedCorr.nii', 'i1.*mean(seed_ts)', {seed_ts});
 <p>Remember to replace 'rsfMRI.nii.gz' and 'seed.nii.gz' with your functional image and seed region (or timecourse) paths, respectively. This is very much an oversimplification: you'll usually want to add more steps in your pipeline like motion correction, normalizing, smoothing, etc.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="amplitude-of-low-frequency-fluctuations-alff"><a class="header" href="#amplitude-of-low-frequency-fluctuations-alff">Amplitude of Low-Frequency Fluctuations (ALFF)</a></h1>
 <p>While I can provide sample code snippets, keep in mind that brain imaging analysis is complex and requires a deep understanding of the underlying analysis tools as well as the specific datasets. Always consult credible and trustworthy documentation or consult an expert when working with these algorithms.</p>
-<h2 id="afni-39"><a class="header" href="#afni-39"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-40"><a class="header" href="#afni-40"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code>## &lt;img src=&quot;../icons/afni.png&quot; height=&quot;24px&quot; /&gt; AFNI
 3dFourier -highpass 0.01 -lowpass 0.08 -prefix REST_filtered.nii REST.nii
 3dcalc -a REST_filtered.nii -expr 'sqr(a)' -prefix REST_filtered_sqr.nii
 3dFourier -retrend -lowpass 0.08 -prefix REST_filtered_sqr_ALFF.nii REST_filtered_sqr.nii
 </code></pre>
-<h2 id="ants-38"><a class="header" href="#ants-38"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-39"><a class="header" href="#ants-39"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs itself does not provide an ALFF calculation functionality.</p>
-<h2 id="fsl-41"><a class="header" href="#fsl-41"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-42"><a class="header" href="#fsl-42"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code>## &lt;img src=&quot;../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
 fslmaths REST -Tmean mean_REST
 fslmaths REST -bptf 33.33 -1 -add mean_REST filtered_REST
 fslmaths filtered_REST -sqr filtered_REST_sqr
 fslmaths filtered_REST_sqr -bptf 33.33 -1 ALFF_REST
 </code></pre>
-<h2 id="freesurfer-38"><a class="header" href="#freesurfer-38"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-39"><a class="header" href="#freesurfer-39"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not directly support ALFF calculation.</p>
-<h2 id="mrtrix-39"><a class="header" href="#mrtrix-39"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-40"><a class="header" href="#mrtrix-40"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix does not directly support ALFF calculation.</p>
 <h2 id="r-39"><a class="header" href="#r-39"><img src="fmri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>R does not directly support ALFF calculation, but packages such as 'neuRosim' can be used to stimulate brain imaging data.</p>
-<h2 id="workbench-command-37"><a class="header" href="#workbench-command-37"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-38"><a class="header" href="#workbench-command-38"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>The Workbench Command does not directly support ALFF calculation.</p>
-<h2 id="python-34"><a class="header" href="#python-34"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-35"><a class="header" href="#python-35"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code>## &lt;img src=&quot;../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
 import numpy as np
 from nilearn import image
@@ -2360,7 +2360,7 @@ tseries_img = image.new_img_like(tseries_img, tseries)
 tseries_img = image.math_img(&quot;img * np.sin(0.01*np.pi*2) * np.sin(0.08*np.pi*2)&quot;, img=tseries_img)
 tseries_img.to_filename('alff.nii.gz')
 </code></pre>
-<h2 id="spm-37"><a class="header" href="#spm-37"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-38"><a class="header" href="#spm-38"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code>% ALFF in SPM
 matlabbatch{1}.spm.tools.alff.inputdata = {'/path/to/functional/data.nii'};
 matlabbatch{1}.spm.tools.alff.bandlow = 0.01;
@@ -2373,7 +2373,7 @@ spm_jobman('run', matlabbatch);
 <p>Please note: These code snippets should only be used as a rough guide and may require heavy modification for any real use case.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="regional-homogeneity-reho"><a class="header" href="#regional-homogeneity-reho">Regional Homogeneity (ReHo)</a></h1>
 <p>I'm sorry for any misunderstanding, but it's not possible to provide example scripts for all the software you mentioned as some of them do not support ReHo (Regional Homogeneity) analysis directly. However, I can provide you examples for a few of them like AFNI and Python and point you to relevant resources for the others.</p>
-<h2 id="afni-40"><a class="header" href="#afni-40"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-41"><a class="header" href="#afni-41"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code>3dReHo -prefix ReHo.nii -inset RestingState.nii
 </code></pre>
 <p>This one-liner will conduct a ReHo analysis on a resting state time series dataset. </p>
@@ -2389,7 +2389,7 @@ data &lt;- fslr::readnii(&quot;RestingState.nii&quot;)
 reho_map &lt;- fslr::fslreho(data)
 </code></pre>
 <p>Notice that R might not be the most efficient tool for this task, especially with large datasets.</p>
-<h2 id="python-35"><a class="header" href="#python-35"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-36"><a class="header" href="#python-36"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import numpy as np
 from nilearn.input_data import NiftiSphereMasker
 from nilearn import datasets, plotting
@@ -2412,7 +2412,7 @@ for i in range(n_regions):
 reho_map = np.repeat(correlation_matrix.mean(axis=0), n_regions, axis=0).reshape(correlation_matrix.shape)
 </code></pre>
 <p>This is a very simplified script for ReHo analysis in Python. It mainly focuses on depicting the main idea of computations and is probably missing some standard parameters like band-pass filtering or discarding first few volumes.</p>
-<h2 id="spm-38"><a class="header" href="#spm-38"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-39"><a class="header" href="#spm-39"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>For MATLAB, you can use toolbox such as DPABI/DPARSF which is developed based on SPM. Here is a simple example:</p>
 <pre><code class="language-matlab">addpath /path/to/DPABI_V4_3_190615;
 DPABI_PATH = fileparts(which('DPABI.m'));
@@ -2434,21 +2434,21 @@ end
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dynamic-functional-connectivity"><a class="header" href="#dynamic-functional-connectivity">Dynamic Functional Connectivity</a></h1>
 <p>Creating an exhaustive script that covers Dynamic Functional Connectivity in each of the mentioned neuroimaging software goes beyond the purposes of this platform and my capabilities as AI. Moreover, flexibility and usability of an MRI pipeline depend greatly on the specific data and goals of the analysis. </p>
 <p>However, I can provide some brief examples of how such scripts might look in each of these tools, in a general sense:</p>
-<h2 id="afni-41"><a class="header" href="#afni-41"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-42"><a class="header" href="#afni-42"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>Here's a basic script for dynamic correlation with a seed ROI in AFNI:</p>
 <pre><code class="language-bash">3dmaskave -quiet -mask seed_roi.nii time_series.nii &gt; seed_roi.1D
 3dfim+ -input time_series.nii -ideal_file seed_roi.1D -out Correlation
 </code></pre>
-<h2 id="ants-39"><a class="header" href="#ants-39"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-40"><a class="header" href="#ants-40"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't directly perform fMRI analysis, but it's typically used for image registration. An important step in functional connectivity analysis is to register (align) the images, which could be done by antsRegistration.</p>
-<h2 id="fsl-42"><a class="header" href="#fsl-42"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-43"><a class="header" href="#fsl-43"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>Here is an example using FSL's fslmeants tool to extract mean time series of a seed ROI, and FSL's fslcc to compute correlation:</p>
 <pre><code class="language-bash">fslmeants -i input.nii -o mean_ts.txt -m seed_roi.nii
 fslcc -i input.nii -r mean_ts.txt &gt; output.txt
 </code></pre>
-<h2 id="freesurfer-39"><a class="header" href="#freesurfer-39"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-40"><a class="header" href="#freesurfer-40"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreecSurfer is primarily used for structural brain imaging, and wouldn't typically be used for dynamic functional connectivity itself. However, you might use it to extract surfaces or ROIs, which can then be used in other tools.</p>
-<h2 id="mrtrix-40"><a class="header" href="#mrtrix-40"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-41"><a class="header" href="#mrtrix-41"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix focuses more on diffusion MRI analyses, so doesn't directly deal with functional connectivity.</p>
 <h2 id="r-41"><a class="header" href="#r-41"><img src="fmri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <p>The &quot;neuroim&quot; package in R can perform functional connectivity analysis:</p>
@@ -2457,9 +2457,9 @@ fmri_data &lt;- fmri_data('fmri.nii')
 seed_ts &lt;- extract_ts(fmri_data, 'seed_roi.nii')
 connectivity_map &lt;- correlate(fmri_data, seed_ts)
 </code></pre>
-<h2 id="workbench-command-38"><a class="header" href="#workbench-command-38"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-39"><a class="header" href="#workbench-command-39"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command can be used to manipulate data and compute connectivity, but requires Connetome Workbench.</p>
-<h2 id="python-36"><a class="header" href="#python-36"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-37"><a class="header" href="#python-37"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <p>For pure Python, nilearn can be used:</p>
 <pre><code class="language-python">from nilearn.input_data import NiftiSpheresMasker
 from nilearn.connectome import ConnectivityMeasure
@@ -2470,7 +2470,7 @@ time_series = masker.fit_transform('fmri.nii')
 correlation_measure = ConnectivityMeasure(kind='correlation')
 correlation_matrix = correlation_measure.fit_transform([time_series])[0]
 </code></pre>
-<h2 id="spm-39"><a class="header" href="#spm-39"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-40"><a class="header" href="#spm-40"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>Here's an example MATLAB script for performing seed-based correlation with SPM:</p>
 <pre><code class="language-matlab">matlabbatch{1}.spm.util.voi.roi{1}.sphere.centre = [x,y,z];
 matlabbatch{1}.spm.util.voi.roi{1}.sphere.radius = r;
@@ -2482,32 +2482,32 @@ conn_module('evabatch', matlabbatch);
 <p>These scripts are very generalized and may not work for specific needs. You should adjust them according to your targets.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="brain-parcellation"><a class="header" href="#brain-parcellation">Brain Parcellation</a></h1>
 <p>I'm sorry but it's not possible to provide an example script for all of those within this platform due to the complex nature of brain imaging processing and the extensive code required. However, I can certainly provide one specific code example from one of the listed software and a brief description on how other software are used for Brain Parcellation. Each software listed uses a slightly different approach and commands for this task:</p>
-<h2 id="afni-42"><a class="header" href="#afni-42"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-43"><a class="header" href="#afni-43"><img src="fmri_analysis/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code> AFNI does not have a direct command for brain parcellation. Instead, brain parcellation with AFNI typically involves using several commands in a pipeline, such as 3dSkullStrip for skull stripping, 3dSeg for segmentation, and whereami for anatomical labeling.
 </code></pre>
-<h2 id="ants-40"><a class="header" href="#ants-40"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-41"><a class="header" href="#ants-41"><img src="fmri_analysis/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code> Similar to AFNI, ANTs does not have a direct command for parcellation. Segmentation and parcellation involve using several commands and scripts from the ANTs ecosystem, such as antsBrainExtraction.sh for skull stripping and antsAtroposN4.sh for segmentation.
 </code></pre>
-<h2 id="fsl-43"><a class="header" href="#fsl-43"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-44"><a class="header" href="#fsl-44"><img src="fmri_analysis/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code> FSL uses FAST and FIRST modules for parcellation, which are part of a pipeline of several commands.
 </code></pre>
-<h2 id="freesurfer-40"><a class="header" href="#freesurfer-40"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-41"><a class="header" href="#freesurfer-41"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code> FreeSurfer uses the recon-all command for brain parcellation.
 </code></pre>
-<h2 id="freesurfer-41"><a class="header" href="#freesurfer-41"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-42"><a class="header" href="#freesurfer-42"><img src="fmri_analysis/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -i input.nii -s subject_01 -all
 </code></pre>
 <p><code>input.nii</code> is the name of your input file and <code>subject_01</code> is the name of the subject. This script runs the entire FreeSurfer pipeline, including brain extraction, segmentation, cortical reconstruction, and parcellation.</p>
-<h2 id="mrtrix-41"><a class="header" href="#mrtrix-41"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-42"><a class="header" href="#mrtrix-42"><img src="fmri_analysis/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code> Similar to AFNI and ANTs, MRtrix uses several different commands in a pipeline, such as dwi2mask for mask derivation, dwi2response for response function estimation, and dwi2fod for FOD estimation.
 </code></pre>
 <h2 id="r-42"><a class="header" href="#r-42"><img src="fmri_analysis/../icons/r.png" height="24px" /> R</a></h2>
 <pre><code> R does not typically perform brain parcellation on its own, but can manipulate and analyze parcellation data produced by other software via dedicated packages like RNifti or oro.nifti.
 </code></pre>
-<h2 id="workbench-command-39"><a class="header" href="#workbench-command-39"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-40"><a class="header" href="#workbench-command-40"><img src="fmri_analysis/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code> Workbench Command utilities are used to manipulate data in surface and volume, in CIFTI format. Specific parcellation tasks would be performed in some other software before or after.
 </code></pre>
-<h2 id="spm-40"><a class="header" href="#spm-40"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-41"><a class="header" href="#spm-41"><img src="fmri_analysis/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code> SPM uses segmentation scripts for brain parcellation, typically incorporated into a pipeline of commands.
 </code></pre>
 <p>Example of a brain parcellation command in SPM:</p>
@@ -2519,10 +2519,10 @@ matlabbatch{1}.spm.spatial.preproc.channel.write = [0 1];
 
 spm_jobman('run', matlabbatch);
 </code></pre>
-<h2 id="python-37"><a class="header" href="#python-37"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-38"><a class="header" href="#python-38"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code> In Python, nilearn and nibabel packages can be used for brain parcellation and the manipulation of NIfTI files, respectively. Parcellation in python typically involves defining a parcellation scheme manually or using a predefined atlas and then using those labels to segment the brain.
 </code></pre>
-<h2 id="python-38"><a class="header" href="#python-38"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-39"><a class="header" href="#python-39"><img src="fmri_analysis/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nilearn import datasets, input_data
 
 dataset = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm') 
@@ -2533,23 +2533,23 @@ time_series = masker.fit_transform('subject_01.nii')
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-6"><a class="header" href="#data-format-conversion-6">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="volume-visualization"><a class="header" href="#volume-visualization">Volume Visualization</a></h1>
 <p>here are minimal examples of volume visualization using different packages:</p>
-<h2 id="afni-43"><a class="header" href="#afni-43"><img src="visualization_and_data_exploration/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-44"><a class="header" href="#afni-44"><img src="visualization_and_data_exploration/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash"># Display an image
 afni anat+orig
 </code></pre>
-<h2 id="ants-41"><a class="header" href="#ants-41"><img src="visualization_and_data_exploration/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-42"><a class="header" href="#ants-42"><img src="visualization_and_data_exploration/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash"># Visualize the anatomic image
 antsSliceRegularizedIsotropicWavelet ants_anatomic.nii
 </code></pre>
-<h2 id="fsl-44"><a class="header" href="#fsl-44"><img src="visualization_and_data_exploration/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-45"><a class="header" href="#fsl-45"><img src="visualization_and_data_exploration/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash"># Visualize the anatomic image
 fslview anat.nii.gz
 </code></pre>
-<h2 id="freesurfer-42"><a class="header" href="#freesurfer-42"><img src="visualization_and_data_exploration/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-43"><a class="header" href="#freesurfer-43"><img src="visualization_and_data_exploration/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash"># Displaying the subject's brain with tksurfer
 tksurfer subject lh inflated
 </code></pre>
-<h2 id="mrtrix-42"><a class="header" href="#mrtrix-42"><img src="visualization_and_data_exploration/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-43"><a class="header" href="#mrtrix-43"><img src="visualization_and_data_exploration/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash"># Visualize the anatomic image
 mrview anat.mif
 </code></pre>
@@ -2558,18 +2558,18 @@ mrview anat.mif
 library(neurobase)
 ortho2(oro.nifti::readNIfTI(&quot;anat.nii.gz&quot;))
 </code></pre>
-<h2 id="workbench-command-40"><a class="header" href="#workbench-command-40"><img src="visualization_and_data_exploration/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-41"><a class="header" href="#workbench-command-41"><img src="visualization_and_data_exploration/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash"># View surfaces and volumes
 wb_command -volume-view anat.nii.gz
 </code></pre>
-<h2 id="python-39"><a class="header" href="#python-39"><img src="visualization_and_data_exploration/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-40"><a class="header" href="#python-40"><img src="visualization_and_data_exploration/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nilearn import plotting
 
 # Visualize the anatomic image
 plotting.plot_img(&quot;anat.nii.gz&quot;)
 plotting.show()
 </code></pre>
-<h2 id="spm-41"><a class="header" href="#spm-41"><img src="visualization_and_data_exploration/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-42"><a class="header" href="#spm-42"><img src="visualization_and_data_exploration/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">% Load MRI data
 V = spm_vol('anat.nii');
 img = spm_read_vols(V);
@@ -2697,23 +2697,23 @@ spm_surface(V);
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-7"><a class="header" href="#data-format-conversion-7">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="image-quality-assessment"><a class="header" href="#image-quality-assessment">Image Quality Assessment</a></h1>
 <p>Here are scripts for each software package you mentioned. These scripts do a basic image quality assessment by displaying image information, calculating image statistics, and checking for corruption or errors in the image file. The exact nature of the image quality assessment will vary depending on the capabilities of each software package. </p>
-<h2 id="afni-44"><a class="header" href="#afni-44"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-45"><a class="header" href="#afni-45"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dinfo -verb image.nii.gz
 3dBrickStat -mean -var -max -min image.nii.gz
 </code></pre>
-<h2 id="ants-42"><a class="header" href="#ants-42"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-43"><a class="header" href="#ants-43"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">PrintHeader image.nii.gz
 ImageMath 3 OutImage.nii.gz Normalize image.nii.gz
 </code></pre>
-<h2 id="fsl-45"><a class="header" href="#fsl-45"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-46"><a class="header" href="#fsl-46"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslinfo image.nii.gz
 fslstats image.nii.gz -R -m
 </code></pre>
-<h2 id="freesurfer-43"><a class="header" href="#freesurfer-43"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-44"><a class="header" href="#freesurfer-44"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_info image.mgz
 mri_segstats --i image.mgz
 </code></pre>
-<h2 id="mrtrix-43"><a class="header" href="#mrtrix-43"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-44"><a class="header" href="#mrtrix-44"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrinfo image.mif
 mrstats image.mif
 </code></pre>
@@ -2722,11 +2722,11 @@ mrstats image.mif
 nii &lt;- readNIfTI(&quot;image.nii.gz&quot;, reorient = FALSE)
 summary(nii)
 </code></pre>
-<h2 id="workbench-command-41"><a class="header" href="#workbench-command-41"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-42"><a class="header" href="#workbench-command-42"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -file-information image.nii.gz
 wb_command -volume-stats image.nii.gz
 </code></pre>
-<h2 id="python-40"><a class="header" href="#python-40"><img src="quality_control/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-41"><a class="header" href="#python-41"><img src="quality_control/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 
 img = nib.load('image.nii.gz')
@@ -2734,7 +2734,7 @@ print(img.header)
 print('Data shape:', img.shape)
 print('Data type:', img.get_data_dtype())
 </code></pre>
-<h2 id="spm-42"><a class="header" href="#spm-42"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-43"><a class="header" href="#spm-43"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">V = spm_vol('image.nii');
 data = spm_read_vols(V);
 fprintf('Dimensions: %d %d %d\n', V.dim);
@@ -2745,30 +2745,30 @@ fprintf('Mean and deviation: %f %f\n', meanVal, stdDevVal);
 <p>Please note that in actual practice, comprehensive Image Quality Assessment usually involves more complex methods and metrics. These scripts just represent a simple first inspection of the data.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="outlier-detection"><a class="header" href="#outlier-detection">Outlier Detection</a></h1>
 <p>below are examples of scripts in each of the mentioned softwares and languages to perform Outlier Detection. Please take into account that these are minimal examples and might need to be adjusted based on your particular needs and datasets.</p>
-<h2 id="afni-45"><a class="header" href="#afni-45"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-46"><a class="header" href="#afni-46"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dToutcount -automask -fraction -polort 4 -legendre func_srt.nii &gt; outcount.1D
 </code></pre>
-<h2 id="ants-43"><a class="header" href="#ants-43"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-44"><a class="header" href="#ants-44"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>In ANTs there isn't a direct function for outlier detection, but you can use the ImageMath function and statistical methods to do so:</p>
 <pre><code class="language-bash">ImageMath 3 output.nii Kmeans image.nii 2
 </code></pre>
-<h2 id="fsl-46"><a class="header" href="#fsl-46"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-47"><a class="header" href="#fsl-47"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>Here is an example using fsl_motion_outliers:</p>
 <pre><code class="language-bash">fsl_motion_outliers -i input.nii.gz -o confound_ev.txt -s output_metric_values.txt -p plot.png
 </code></pre>
-<h2 id="freesurfer-44"><a class="header" href="#freesurfer-44"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-45"><a class="header" href="#freesurfer-45"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_binarize --i input.mgz --o binary_vol.mgz --min .00001
 </code></pre>
-<h2 id="mrtrix-44"><a class="header" href="#mrtrix-44"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-45"><a class="header" href="#mrtrix-45"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix doesn't have specific command for outlier detection, but it can be done through certain steps in the diffusion processing pipeline such as dwidenoise, mrdegibbs and dwifslpreproc.</p>
 <h2 id="r-45"><a class="header" href="#r-45"><img src="quality_control/../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">data &lt;- read.csv(&quot;data.csv&quot;)
 boxplot.stats(data$column)$out
 </code></pre>
-<h2 id="workbench-command-42"><a class="header" href="#workbench-command-42"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-43"><a class="header" href="#workbench-command-43"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -cifti-outlier-count my_data.dscalar.nii 2 2 count_outliers.dscalar.nii -above 1
 </code></pre>
-<h2 id="spm-43"><a class="header" href="#spm-43"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-44"><a class="header" href="#spm-44"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-python">import matplotlib.pyplot as plt
 from scipy.io import loadmat
 data = loadmat('data.mat')['data']
@@ -2781,21 +2781,21 @@ plt.show()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="motion-outlier-identification"><a class="header" href="#motion-outlier-identification">Motion Outlier Identification</a></h1>
 <p>Unfortunately, as an AI text-based model, I don't have the capability to &quot;show&quot; images or scripts in the traditional sense. However, I can provide you with examples of text commands or scripts for you to follow, assuming you have already installed the desired neuroimaging toolboxes.</p>
 <p><strong>Please be aware, you should not run any code without understanding it fully. These example scripts are a basic outline and may need adjustments to fit your specific data and goal.</strong></p>
-<h2 id="afni-46"><a class="header" href="#afni-46"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-47"><a class="header" href="#afni-47"><img src="quality_control/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash"># Apply 3dToutcount for spike count
 3dToutcount 'input.nii.gz' &gt; outcount.1D
 # Run 1dplot for visual inspection
 1dplot outcount.1D
 </code></pre>
-<h2 id="ants-44"><a class="header" href="#ants-44"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-45"><a class="header" href="#ants-45"><img src="quality_control/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't seem to have a specific utility for motion outlier identification, its key utility is in image registration i.e., aligning images.</p>
-<h2 id="fsl-47"><a class="header" href="#fsl-47"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-48"><a class="header" href="#fsl-48"><img src="quality_control/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash"># FSL's tool for motion outlier detection is FSLMotionOutliers
 fsl_motion_outliers -i input.nii.gz -o motion_outliers.txt
 </code></pre>
-<h2 id="freesurfer-45"><a class="header" href="#freesurfer-45"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-46"><a class="header" href="#freesurfer-46"><img src="quality_control/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>Similar to ANTs, FreeSurfer doesn't have a specific tool for motion outlier detection. Its key function is in cortical surface reconstruction.</p>
-<h2 id="mrtrix-45"><a class="header" href="#mrtrix-45"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-46"><a class="header" href="#mrtrix-46"><img src="quality_control/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>As with ANTs and Freesurfer above, MRtrix wouldn't be the tool of choice for motion outlier identification itself.</p>
 <h2 id="r-46"><a class="header" href="#r-46"><img src="quality_control/../icons/r.png" height="24px" /> R</a></h2>
 <p>In R, you might take advantage of the 'fslr' package which is an interface for FSL:</p>
@@ -2803,11 +2803,11 @@ fsl_motion_outliers -i input.nii.gz -o motion_outliers.txt
 dti_img &lt;- readnii('dti.nii.gz')
 motion_outliers &lt;- fsl_motion_outliers(dti_img, savetxt=TRUE, retimg=FALSE)
 </code></pre>
-<h2 id="workbench-command-43"><a class="header" href="#workbench-command-43"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-44"><a class="header" href="#workbench-command-44"><img src="quality_control/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>For &quot;connectome workbench&quot;, which processes HCP data, the preprocessing pipeline should handle motion correction. Further motion regressors can be explored via the following command:</p>
 <pre><code class="language-bash">wb_command -cifti-convert -from-gifti my_data.func.gii my_data.dtseries.nii
 </code></pre>
-<h2 id="python-41"><a class="header" href="#python-41"><img src="quality_control/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-42"><a class="header" href="#python-42"><img src="quality_control/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nilearn import image
 from nilearn.image import mean_img
 from nilearn.plotting import plot_epi, show
@@ -2819,7 +2819,7 @@ gcor = np.corrcoef(global_mean, mean_func).mean()
 
 print('Global correlation (GCor) is: ', gcor)
 </code></pre>
-<h2 id="spm-44"><a class="header" href="#spm-44"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-45"><a class="header" href="#spm-45"><img src="quality_control/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">motionFile = load('rp_input.txt'); % motion parameters file from SPM
 FD = sum(abs(diff(motionFile)));
 figure, plot(FD), title('Framewise Displacement')
@@ -2829,23 +2829,23 @@ save('FD.mat', 'FD');
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-format-conversion-8"><a class="header" href="#data-format-conversion-8">Data Format Conversion</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dicom-to-nifti-conversion"><a class="header" href="#dicom-to-nifti-conversion">DICOM to NIfTI Conversion</a></h1>
 <p>here are some examples of how you'd convert DICOM images to NIfTI using different libraries and languages. Please make sure to replace the placeholders with your actual file paths, as needed.</p>
-<h2 id="afni-47"><a class="header" href="#afni-47"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-48"><a class="header" href="#afni-48"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI provides a program called <code>to3d</code> which can be used to convert DICOM files.</p>
 <pre><code class="language-bash">to3d -prefix output.nii -format NIFTI 'dicom_*.dcm'
 </code></pre>
-<h2 id="ants-45"><a class="header" href="#ants-45"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-46"><a class="header" href="#ants-46"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs provides a function called <code>ConvertToNifti</code>.</p>
 <pre><code class="language-bash">ConvertToNifti input.dcm output.nii
 </code></pre>
-<h2 id="fsl-48"><a class="header" href="#fsl-48"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-49"><a class="header" href="#fsl-49"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>FSL uses <code>fslchfiletype</code> for the format conversion.</p>
 <pre><code class="language-bash">fslchfiletype NIFTI input.dcm output
 </code></pre>
-<h2 id="freesurfer-46"><a class="header" href="#freesurfer-46"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-47"><a class="header" href="#freesurfer-47"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not directly support DICOM to NIfTI conversion. However, it can be achieved via the <code>mri_convert</code> function.</p>
 <pre><code class="language-bash">mri_convert input.dcm output.nii
 </code></pre>
-<h2 id="mrtrix-46"><a class="header" href="#mrtrix-46"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-47"><a class="header" href="#mrtrix-47"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix uses <code>mrconvert</code> to transform formats.</p>
 <pre><code class="language-bash">mrconvert input.dcm output.nii
 </code></pre>
@@ -2857,11 +2857,11 @@ dicom_data &lt;- readDICOMFile('input.dcm')
 nifti_data &lt;- as.nifti(dicom_data)
 writeNIfTI(nifti_data, filename='output.nii')
 </code></pre>
-<h2 id="workbench-command-44"><a class="header" href="#workbench-command-44"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-45"><a class="header" href="#workbench-command-45"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>The 'wb_command -cifti-convert' serves the purpose in Workbench.</p>
 <pre><code class="language-bash">wb_command -cifti-convert -to-nifti input.dcm output.nii
 </code></pre>
-<h2 id="python-42"><a class="header" href="#python-42"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-43"><a class="header" href="#python-43"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
 <p>In Python, you can use <code>pydicom</code> and <code>nibabel</code> libraries to convert DICOM to NIfTI.</p>
 <pre><code class="language-python">import pydicom
 import nibabel as nib
@@ -2872,34 +2872,34 @@ data = data_set.pixel_array
 new_image = nib.Nifti1Image(data, affine=np.eye(4))
 nib.save(new_image, 'output.nii')
 </code></pre>
-<h2 id="spm-45"><a class="header" href="#spm-45"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-46"><a class="header" href="#spm-46"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>In SPM, we use <code>spm_dicom_convert</code> function.</p>
 <pre><code class="language-matlab">headers = spm_dicom_headers('input.dcm');
 spm_dicom_convert(headers,'all','flat','nii');
 </code></pre>
 <p>Please note that these are very basic examples. You may need to adjust these scripts based on your specific needs or features from your DICOM files.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dicom-to-minc-conversion"><a class="header" href="#dicom-to-minc-conversion">DICOM to MINC Conversion</a></h1>
-<h2 id="afni-48"><a class="header" href="#afni-48"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-49"><a class="header" href="#afni-49"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">to3d -prefix outDataset.nii -session ./ DICOM/*
 3dcopy outDataset.nii output.mnc
 </code></pre>
-<h2 id="ants-46"><a class="header" href="#ants-46"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-47"><a class="header" href="#ants-47"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>There is no native DICOM to MINC conversion in ANTs. Therefore, a common practice is to convert DICOM to NIfTI with dcm2niix, then converting NIfTI to MINC with nii2mnc.</p>
-<h2 id="fsl-49"><a class="header" href="#fsl-49"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-50"><a class="header" href="#fsl-50"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslchfiletype ANALYZE input.dcm output.img
 dcm2mnc output.img output.mnc
 </code></pre>
-<h2 id="freesurfer-47"><a class="header" href="#freesurfer-47"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-48"><a class="header" href="#freesurfer-48"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer doesn't allow MINC file creation. A common solution is to convert DICOM to NIfTI using FreeSurfer's mri_convert, then NIfTI to MINC.</p>
-<h2 id="mrtrix-47"><a class="header" href="#mrtrix-47"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-48"><a class="header" href="#mrtrix-48"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrconvert input.dcm output.nii
 nii2mnc output.nii output.mnc
 </code></pre>
 <h2 id="r-48"><a class="header" href="#r-48"><img src="data_format_conversion/../icons/r.png" height="24px" /> R</a></h2>
 <p>R packages do not directly provide DICOM to MINC conversion. Usually, the conversion involves dealing with DICOM to NIfTI and then NIfTI to MINC.</p>
-<h2 id="workbench-command-45"><a class="header" href="#workbench-command-45"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-46"><a class="header" href="#workbench-command-46"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>There isn't native DICOM to MINC conversion for Workbench. A workaround is to use other tools like dcm2niix, and then convert NIfTI to MINC using nii2mnc.</p>
-<h2 id="spm-46"><a class="header" href="#spm-46"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-47"><a class="header" href="#spm-47"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">matlabbatch{1}.spm.util.import.dicom.data = {'C:/Users/User/Desktop/DICOM'};
 matlabbatch{1}.spm.util.import.dicom.root = 'flat';
 matlabbatch{1}.spm.util.import.dicom.outdir = {'C:/Users/User/Desktop/NIfTI'};
@@ -2908,7 +2908,7 @@ spm_jobman('run', matlabbatch);
 cd('C:/Users/User/Desktop/NIfTI');
 !nii2mnc YourNIfTIFile.nii YourMINCFile.mnc
 </code></pre>
-<h2 id="python-43"><a class="header" href="#python-43"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-44"><a class="header" href="#python-44"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import pydicom
 import nibabel as nib
 import numpy as np
@@ -2924,23 +2924,23 @@ volumeOut.data[:,:,:] = array_np
 </code></pre>
 <p>Please note: DICOM to MINC conversion is not commonly performed directly in many of these platforms, thus certain conversions involve intermediate steps such as achieving NIfTI format. Please ensure the necessary tools like dcm2niix, nii2mnc are installed and remember to replace filenames accordingly.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="minc-to-nifti-conversion"><a class="header" href="#minc-to-nifti-conversion">MINC to NIfTI Conversion</a></h1>
-<h2 id="afni-49"><a class="header" href="#afni-49"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-50"><a class="header" href="#afni-50"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code>#!/bin/bash
 3dAFNItoNIFTI -prefix output.nii input.mnc
 </code></pre>
-<h2 id="ants-47"><a class="header" href="#ants-47"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-48"><a class="header" href="#ants-48"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code>#!/bin/bash
 ANTS 3 -m MSR[output.nii,input.mnc,1,32,fixed.nii] -o input.nii
 </code></pre>
-<h2 id="fsl-50"><a class="header" href="#fsl-50"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-51"><a class="header" href="#fsl-51"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code>#!/bin/bash
 fslchfiletype NIFTI input.mnc output.nii
 </code></pre>
-<h2 id="freesurfer-48"><a class="header" href="#freesurfer-48"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-49"><a class="header" href="#freesurfer-49"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code>#!/bin/bash
 mri_convert input.mnc output.nii
 </code></pre>
-<h2 id="mrtrix-48"><a class="header" href="#mrtrix-48"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-49"><a class="header" href="#mrtrix-49"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code>#!/bin/bash
 mrconvert input.mnc output.nii -datatype float32
 </code></pre>
@@ -2956,7 +2956,7 @@ nii &lt;- as(mnc, &quot;nifti&quot;)
 # save NIfTI file
 writeNIfTI(nii, &quot;output.nii&quot;)
 </code></pre>
-<h2 id="workbench-command-46"><a class="header" href="#workbench-command-46"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-47"><a class="header" href="#workbench-command-47"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code>#!/bin/bash
 wb_command -cifti-convert -from-nifti input.mnc output.nii
 </code></pre>
@@ -2970,7 +2970,7 @@ mnc = nib.load('input.mnc')
 # Save as NIfTI
 nib.save(nib.Nifti1Image(np.asanyarray(mnc.dataobj), mnc.affine), 'output.nii')
 </code></pre>
-<h2 id="spm-47"><a class="header" href="#spm-47"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-48"><a class="header" href="#spm-48"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('defaults', 'FMRI');
 spm_jobman('initcfg');
 
@@ -2982,17 +2982,17 @@ spm_jobman('run', matlabbatch);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nifti-to-dicom-conversion"><a class="header" href="#nifti-to-dicom-conversion">NIfTI to DICOM Conversion</a></h1>
 <p>some of the requested imaging tools do not support direct conversion from NIfTI to DICOM. As such, I can only provide examples for those that support this operation. Here are the examples:</p>
-<h2 id="afni-50"><a class="header" href="#afni-50"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni-51"><a class="header" href="#afni-51"><img src="data_format_conversion/../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dresample -prefix outfile.dcm -input infile.nii -orient RAI
 </code></pre>
-<h2 id="ants-48"><a class="header" href="#ants-48"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants-49"><a class="header" href="#ants-49"><img src="data_format_conversion/../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't support direct conversion from NIfTI to DICOM. You might need additional tools like dcm2niix or equivalent.</p>
-<h2 id="fsl-51"><a class="header" href="#fsl-51"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl-52"><a class="header" href="#fsl-52"><img src="data_format_conversion/../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>FSL doesn't support conversion from NIfTI to DICOM directly. You need additional tools like dcm2niix or equivalent.</p>
-<h2 id="freesurfer-49"><a class="header" href="#freesurfer-49"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-50"><a class="header" href="#freesurfer-50"><img src="data_format_conversion/../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_convert --out_type dicom infile.nii outfile.dcm
 </code></pre>
-<h2 id="mrtrix-49"><a class="header" href="#mrtrix-49"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix-50"><a class="header" href="#mrtrix-50"><img src="data_format_conversion/../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix does not support NIfTI to DICOM conversion.</p>
 <h2 id="r-50"><a class="header" href="#r-50"><img src="data_format_conversion/../icons/r.png" height="24px" /> R</a></h2>
 <p>R does not support NIfTI to DICOM conversion without external packages like oro.nifti or divest.</p>
@@ -3000,12 +3000,12 @@ spm_jobman('run', matlabbatch);
 niftiFile &lt;- oro.nifti::readNIfTI('infile.nii', reorient = FALSE)
 dicomOut&lt;- oro.dicom::writeDICOM(niftiFile,'outfile.dcm')
 </code></pre>
-<h2 id="spm-48"><a class="header" href="#spm-48"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm-49"><a class="header" href="#spm-49"><img src="data_format_conversion/../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">hdr = load_nii_hdr('infile.nii');
 img = load_nii_img(hdr);
 dicomwrite(img, 'outfile.dcm')
 </code></pre>
-<h2 id="python-44"><a class="header" href="#python-44"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-45"><a class="header" href="#python-45"><img src="data_format_conversion/../icons/python.png" height="24px" /> Python</a></h2>
 <p>Using Pydicom and Nibabel libraries in Python:</p>
 <pre><code class="language-python">import pydicom
 import nibabel as nib
@@ -3023,7 +3023,7 @@ output.PixelData = data.tostring()
 # save as dicom
 output.save_as('outfile.dcm')
 </code></pre>
-<h2 id="workbench-command-47"><a class="header" href="#workbench-command-47"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command-48"><a class="header" href="#workbench-command-48"><img src="data_format_conversion/../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command does not support NIfTI to DICOM conversion.</p>
 
                     </main>
