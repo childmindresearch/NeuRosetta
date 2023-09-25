@@ -4,14 +4,14 @@ Unfortunately, it would be very complex and space-consuming to provide examples 
 
 However, I can show short examples in FSL, MRtrix, and a Python-based tool named Dipy. These examples will be minimal and will need to be adjusted based on your specific dataset and research question.
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 ```bash
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 # Preprocessing (eddy correct and brain extraction) omitted
 dtifit --data=yourdata --out=youroutput --mask=yourmask --bvecs=bvecs --bvals=bvals
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```bash
 # MRtrix3 tensor fitting
@@ -19,7 +19,7 @@ dtifit --data=yourdata --out=youroutput --mask=yourmask --bvecs=bvecs --bvals=bv
 dwi2tensor input - | tensor2metric - -fa output_FA.mif -adc output_MD.mif -rd output_RD.mif -ad output_AD.mif
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 ```python
 from dipy.reconst.dti import TensorModel

@@ -9,7 +9,7 @@ While I cannot create comprehensive scripts, I can certainly provide a brief ove
 3dmaskave -mask lesion_mask.nii.gz -quiet lesion.nii.gz > lesion_summary.txt
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```bash
 ImageMath 3 lesion_mask.nii.gz Normalize lesion.nii.gz
@@ -23,21 +23,21 @@ fslmaths lesion.nii.gz -bin lesion_mask.nii.gz
 fslstats lesion.nii.gz -k lesion_mask.nii.gz -M > lesion_summary.txt
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```bash
 mri_binarize --i lesion.nii.gz --o lesion_mask.mgz --min 0.5
 mri_segstats --i lesion.nii.gz --seg lesion_mask.mgz --summary lesion_summary.txt
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```bash
 mrthreshold lesion.nii.gz lesion_mask.nii.gz -abs 0.5
 mrmath lesion.nii.gz mean -mask lesion_mask.nii.gz -axes 3 - | mrstats - -output mean > lesion_summary.txt
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 ```R
 library(neurobase)
@@ -46,7 +46,7 @@ lesion_mask <- lesion > 0.5
 lesion_summary <- mean(lesion[lesion_mask])
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 ```bash
 wb_command -volume-math "(volume > 0.5)" lesion_mask.nii.gz -var volume lesion.nii.gz

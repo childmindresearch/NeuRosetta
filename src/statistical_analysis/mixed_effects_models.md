@@ -15,7 +15,7 @@ export STUDY_DIR=/path_to_your_study_directory
 flameo --cope=${STUDY_DIR}/cope1.nii.gz --varcope=${STUDY_DIR}/varcope1.nii.gz --mask=${STUDY_DIR}/mask.nii.gz --dmatrix=${STUDY_DIR}/design.mat --tcopes=${STUDY_DIR}/design.con --fstats --runmode=flame1
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 In R, you can use the `lme4` package for mixed-effects models:
 

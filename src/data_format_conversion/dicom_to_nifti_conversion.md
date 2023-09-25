@@ -2,7 +2,7 @@
 
 here are some examples of how you'd convert DICOM images to NIfTI using different libraries and languages. Please make sure to replace the placeholders with your actual file paths, as needed.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 AFNI provides a program called `to3d` which can be used to convert DICOM files.
 
@@ -10,7 +10,7 @@ AFNI provides a program called `to3d` which can be used to convert DICOM files.
 to3d -prefix output.nii -format NIFTI 'dicom_*.dcm'
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ANTs provides a function called `ConvertToNifti`.
 
@@ -18,7 +18,7 @@ ANTs provides a function called `ConvertToNifti`.
 ConvertToNifti input.dcm output.nii
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 FSL uses `fslchfiletype` for the format conversion.
 
@@ -26,7 +26,7 @@ FSL uses `fslchfiletype` for the format conversion.
 fslchfiletype NIFTI input.dcm output
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 FreeSurfer does not directly support DICOM to NIfTI conversion. However, it can be achieved via the `mri_convert` function.
 
@@ -34,7 +34,7 @@ FreeSurfer does not directly support DICOM to NIfTI conversion. However, it can 
 mri_convert input.dcm output.nii
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 MRtrix uses `mrconvert` to transform formats.
 
@@ -42,7 +42,7 @@ MRtrix uses `mrconvert` to transform formats.
 mrconvert input.dcm output.nii
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 In R, you would use the `oro.dicom` and `oro.nifti` libraries. First, you read the DICOM file and then you write it out as NIfTI.
 
@@ -54,7 +54,7 @@ nifti_data <- as.nifti(dicom_data)
 writeNIfTI(nifti_data, filename='output.nii')
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 The 'wb_command -cifti-convert' serves the purpose in Workbench.
 
@@ -62,7 +62,7 @@ The 'wb_command -cifti-convert' serves the purpose in Workbench.
 wb_command -cifti-convert -to-nifti input.dcm output.nii
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 In Python, you can use `pydicom` and `nibabel` libraries to convert DICOM to NIfTI.
 
@@ -77,7 +77,7 @@ new_image = nib.Nifti1Image(data, affine=np.eye(4))
 nib.save(new_image, 'output.nii')
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 In SPM, we use `spm_dicom_convert` function.
 

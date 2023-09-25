@@ -2,13 +2,13 @@
 
 here are minimal examples of scripts for Region-of-Interest (ROI) Analysis in the respective software packages. Please make sure that appropriate data sets and data paths are provided while running these scripts.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```bash
 3dROIstats -mask ROI.nii -quiet epi.nii > roistats.txt
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```python
 from nipype.interfaces.ants import MeasureImageSimilarity
@@ -21,25 +21,25 @@ similarity.inputs.radius_or_number_of_bins = 4
 similarity.run()
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```bash
 fslstats input_image.nii.gz -l 500 -u 600 -V > output.txt
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```bash
 mri_segstats --seg seg.nii --i scalar_map.nii --avgwf avg_roi_values.txt
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```bash
 mrstats input_image.mif -mask roi.mif -output mean > roistats.txt
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 ```R
 library(neurobase)
@@ -50,13 +50,13 @@ roi_stats <- vol[roi==1]
 mean(roi_stats)
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 ```bash
 wb_command -volume-stats input_volume.nii -roi mask_volume.nii > roistats.txt
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 ```python
 from nipype.interfaces.fsl import ImageMaths
@@ -75,7 +75,7 @@ masked_data = masking.apply_mask(img, 'ROI.nii')
 mean_val = masked_data.mean()
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```MATLAB
 V = spm_vol('input_image.nii');

@@ -2,27 +2,27 @@
 
 Here are examples of scripts that perform rigid spatial transformations in each package asked.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 ```bash
 3dAllineate -base base_image.nii -input input_image.nii -prefix output_image.nii -1Dmatrix_save rigid_mat.1D
 ```
   
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ```bash
 antsRegistrationSyNQuick.sh -d 3 -f fixed.nii -m moving.nii -o output.nii -t r
 ```
   
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 ```bash
 flirt -in input_image.nii -ref reference_image.nii -out output_image.nii -omat rigid_mat.mat -dof 6
 ```
   
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 ```bash
 mri_coreg --s subject --mov input_image.nii --reg output.mgz
 ```
     
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 ```bash
 mrregister fixed.nii moving.nii -rigid output.mif
 ```
@@ -35,12 +35,12 @@ transformed <- rotate(image, theta = c(0,0,pi/4))
 writeNifti(transformed, "transformed_image.nii")
 ```
   
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 ```bash
 wb_command -volume-affine-resample input.nii affine.mat mm cubic output.nii
 ```
   
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 ```python
 import matlab.engine
 eng = matlab.engine.start_matlab()

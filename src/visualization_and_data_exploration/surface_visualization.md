@@ -4,7 +4,7 @@ here are some minimal example scripts for surface visualization in each mentione
 
 1. **AFNI**:
 ```bash
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 suma -i example_surf.gii
 ```
 
@@ -24,13 +24,13 @@ fslview example_data.nii.gz -m ortho
 
 4. **FreeSurfer**:
 ```bash
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 freeview -f $SUBJECTS_DIR/freesurfer/subjects/subject/surf/lh.pial:color=255,0,0
 ```
 
 5. **MRtrix**:
 ```bash
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 mrview example_diffusion.mif -tractography.load example_tract.tck
 ```
 

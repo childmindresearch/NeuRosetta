@@ -4,27 +4,27 @@ Sorry for the misunderstanding, but creating scripts for Dynamic Connectivity An
 
 Let's assume we have preprocessed fMRI data and a mask/region of interest (ROI) for each of them.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 ```bash
 3dmaskave -quiet -mask my_mask.nii.gz my_preprocessed_fmri_data.nii.gz > time_series.txt
 ```
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ANTs doesn't include dedicated functionalities for time-series extraction. However, you can use it for image preprocessing before extracting the time-series using other tools.
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 ```bash
 fslmeants -i my_preprocessed_fmri_data.nii.gz -o time_series.txt -m my_mask.nii.gz
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 FreeSurfer doesn't directly support this functionality. It focuses on reconstruction and analysis of cortical surface. After completing these steps with FreeSurfer, you may use other tools to extract time-series.
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 ```bash
 mrstats my_preprocessed_fmri_data.nii.gz -mask my_mask.nii.gz -output mean > time_series.txt
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 ```R
 library(fslr)
 dat <- fslr::readnii("my_preprocessed_fmri_data.nii.gz")
@@ -32,10 +32,10 @@ mask <- fslr::readnii("my_mask.nii.gz")
 time_series <- colMeans(dat[mask == 1, ])
 write.table(time_series, file = "time_series.txt")
 ```
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 Workbench Command is mainly for dealing data in particular formats (like CIFTI). Please use other tools for extracting time series. 
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 ```python
 import nibabel as nib
 import numpy as np
@@ -44,7 +44,7 @@ mask = nib.load("my_mask.nii.gz").get_fdata().astype(bool)
 time_series = np.mean(img.get_fdata()[mask], axis=0)
 np.savetxt("time_series.txt", time_series)
 ```
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 ```matlab
 Vf = spm_vol('my_preprocessed_fmri_data.nii.gz');
 Vmask = spm_vol('my_mask.nii.gz');

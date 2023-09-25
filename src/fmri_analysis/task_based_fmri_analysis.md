@@ -2,7 +2,7 @@
 
 some of these software libraries don't have direct support for task-based fMRI analysis or are considered inappropriate for such tasks. Nevertheless, here are short minimal example scripts for AFNI, FSL, and SPM (via MATLAB). 
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```bash
 # First, let's create a model design
@@ -25,7 +25,7 @@ some of these software libraries don't have direct support for task-based fMRI a
     -fout -tout -verb -Rwherr whitened_errts.Tech001_REML \
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```bash
 # First, let's setup some variables
@@ -42,7 +42,7 @@ feat_model $task_dir
 feat $task_dir.fsf
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```matlab
 % Initialize SPM

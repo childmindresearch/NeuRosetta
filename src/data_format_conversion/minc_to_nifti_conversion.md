@@ -1,36 +1,36 @@
 # MINC to NIfTI Conversion
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 ```
 #!/bin/bash
 3dAFNItoNIFTI -prefix output.nii input.mnc
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ```
 #!/bin/bash
 ANTS 3 -m MSR[output.nii,input.mnc,1,32,fixed.nii] -o input.nii
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 ``` 
 #!/bin/bash
 fslchfiletype NIFTI input.mnc output.nii
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 ``` 
 #!/bin/bash
 mri_convert input.mnc output.nii
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 ``` 
 #!/bin/bash
 mrconvert input.mnc output.nii -datatype float32
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 ```
 library(oro.nifti)
 
@@ -44,7 +44,7 @@ nii <- as(mnc, "nifti")
 writeNIfTI(nii, "output.nii")
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 ``` 
 #!/bin/bash
 wb_command -cifti-convert -from-nifti input.mnc output.nii
@@ -62,7 +62,7 @@ mnc = nib.load('input.mnc')
 nib.save(nib.Nifti1Image(np.asanyarray(mnc.dataobj), mnc.affine), 'output.nii')
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 ```matlab
 spm('defaults', 'FMRI');
 spm_jobman('initcfg');

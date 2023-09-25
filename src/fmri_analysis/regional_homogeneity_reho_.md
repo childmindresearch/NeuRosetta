@@ -2,7 +2,7 @@
 
 I'm sorry for any misunderstanding, but it's not possible to provide example scripts for all the software you mentioned as some of them do not support ReHo (Regional Homogeneity) analysis directly. However, I can provide you examples for a few of them like AFNI and Python and point you to relevant resources for the others.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
     
 ```
 3dReHo -prefix ReHo.nii -inset RestingState.nii
@@ -18,7 +18,7 @@ These packages don't provide direct methods or commands to conduct ReHo analysis
 For example, in FSL you might first extract the time series the ROI using fslmeants, then run fslcc to compute cross-correlation coefficient, and then square that value to get Regional homogeneity.
      
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
     
 Here is a minimal example with fslr package.
     
@@ -29,7 +29,7 @@ reho_map <- fslr::fslreho(data)
 ```
 Notice that R might not be the most efficient tool for this task, especially with large datasets.
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
   
 ```python
 import numpy as np
@@ -57,7 +57,7 @@ reho_map = np.repeat(correlation_matrix.mean(axis=0), n_regions, axis=0).reshape
 This is a very simplified script for ReHo analysis in Python. It mainly focuses on depicting the main idea of computations and is probably missing some standard parameters like band-pass filtering or discarding first few volumes.
 
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 For MATLAB, you can use toolbox such as DPABI/DPARSF which is developed based on SPM. Here is a simple example:
 

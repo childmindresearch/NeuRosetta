@@ -49,7 +49,7 @@ fsl_write(cor, "correlation.nii.gz")
 wb_command -cifti-correlation output.cii seed.dscalar.nii out.dconn.nii
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```python
 import os

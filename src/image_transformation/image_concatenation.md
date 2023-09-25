@@ -2,35 +2,35 @@
 
 for each of these software, here's a minimal example of image concatenation:
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```bash
 3dTcat -prefix concatenated.nii input1.nii input2.nii
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```bash
 ImageMath 3 concatenated.nii m input1.nii input2.nii
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```bash
 fslmerge -t concatenated.nii input1.nii input2.nii
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 FreeSurfer does not directly support image concatenation. However, you can use mris_convert to transform surfaces into volumetric format, then use FSL or AFNI to concatenate.
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```bash
 mrcat input1.nii input2.nii concatenated.nii -axis 3
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 ```R
 library(oro.nifti)
@@ -40,11 +40,11 @@ nii_concat = abind(nii1, nii2)
 writeNIfTI(nii_concat, "concatenated.nii")
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 Workbench's wb_command tool doesn't natively support 3D NIFTI concatenation you'll likely need to use another tool (like FSL, ANTs, or AFNI) to do the concatenation.
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 ```python
 import nibabel as nib

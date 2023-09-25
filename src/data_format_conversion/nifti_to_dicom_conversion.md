@@ -2,28 +2,28 @@
 
 some of the requested imaging tools do not support direct conversion from NIfTI to DICOM. As such, I can only provide examples for those that support this operation. Here are the examples:
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```bash
 3dresample -prefix outfile.dcm -input infile.nii -orient RAI
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ANTs doesn't support direct conversion from NIfTI to DICOM. You might need additional tools like dcm2niix or equivalent.
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 FSL doesn't support conversion from NIfTI to DICOM directly. You need additional tools like dcm2niix or equivalent.
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```bash
 mri_convert --out_type dicom infile.nii outfile.dcm
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 MRtrix does not support NIfTI to DICOM conversion.
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 R does not support NIfTI to DICOM conversion without external packages like oro.nifti or divest.
 
 ```R
@@ -32,7 +32,7 @@ niftiFile <- oro.nifti::readNIfTI('infile.nii', reorient = FALSE)
 dicomOut<- oro.dicom::writeDICOM(niftiFile,'outfile.dcm')
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```matlab
 hdr = load_nii_hdr('infile.nii');
@@ -40,7 +40,7 @@ img = load_nii_img(hdr);
 dicomwrite(img, 'outfile.dcm')
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 Using Pydicom and Nibabel libraries in Python:
 
@@ -62,5 +62,5 @@ output.PixelData = data.tostring()
 output.save_as('outfile.dcm')
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 Workbench Command does not support NIfTI to DICOM conversion.

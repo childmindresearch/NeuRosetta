@@ -2,7 +2,7 @@
 
 while I cannot run these scripts for you, I can certainly provide an example of how they might be structured. Here are example scripts for the different brain imaging software packages you mentioned:
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```
 #!/bin/tcsh
@@ -10,35 +10,35 @@ while I cannot run these scripts for you, I can certainly provide an example of 
 3dresample -master T1.nii  -prefix brain_mask_resampled.nii
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```
 #Resampling
 antsApplyTransforms -d 3 -i brain.nii.gz -r brain.nii.gz  -o brain_resampled.nii.gz -n NearestNeighbor
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```
 # skull stripping 
 bet T1.nii T1_brain.nii
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```
 #!/bin/tcsh
 recon-all -i T1.nii -subjid subject1 -all
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```
 # mask generation
 dwi2mask dwi.mif mask.mif
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 ```
 # Assuming you've already loaded your data into variable "brain"
@@ -46,14 +46,14 @@ library(neurobase)
 brain_mask <- mask(brain, type = "otu")
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 ```
 # Generate a mask with wb_command 
 wb_command -volume-math "(x > 0) ? 1 : 0" brain_mask.nii -var x T1.nii
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 ```python
 import nibabel as nib
@@ -66,7 +66,7 @@ resampled_img = nib.Nifti1Image(img.dataobj, img.affine.dot(np.diag([1, 2, 3, 1]
 nib.save(resampled_img, 'brain.nii.gz')
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```MATLAB
 spm('Defaults','fMRI');

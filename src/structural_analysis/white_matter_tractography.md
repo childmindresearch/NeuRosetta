@@ -4,7 +4,7 @@ For legal and ethical reasons, all personal health information is confidential a
 
 Please note that these scripts assume that you're working with valid and anonymized DICOM, NIFTI, or similar medical imaging files, and that you've properly installed and configured all required imaging software libraries and dependencies.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```
 3dDWItoDT -prefix DTI dataset.nii
@@ -12,13 +12,13 @@ Please note that these scripts assume that you're working with valid and anonymi
 3dTrackID -mode TEST -dti_in DTI+orig
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```
 antsRegistrationSyN.sh -d 3 -f fixed.nii.gz -m moving.nii.gz -o output/output
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```
 eddy_correct input.nii.gz output.nii.gz 0
@@ -27,7 +27,7 @@ bedpostx input_directory
 probtrackx --samples=bedpostx_directory/merged --mask=mask.nii.gz --seed=seeds.txt --out=probtract_output
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```
 mri_convert input.nii.gz output.mgz
@@ -35,7 +35,7 @@ recon-all -i input.mgz -s subject -all
 trac-all -s subject -c diffusion_parameters.txt
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 ```b
 dwi2response tournier input.mif response.txt
@@ -43,7 +43,7 @@ dwi2fod csd input.mif response.txt fod.mif
 tckgen fod.mif output.tck -act 5TT.mif -seed_image mask.mif -select 5000
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 ```R
 library(neurobase)
@@ -51,7 +51,7 @@ nifti_img <- readnii(input.nii.gz)
 fa_img <- dtiIndices(nifti_img, type = "FA")
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 ```b
 wb_command -volume-tractography input.nii.gz output.fib.gz
@@ -70,7 +70,7 @@ fit = model.fit(data)
 fa = fractional_anisotropy(fit.evals)
 nib.save(nib.Nifti1Image(fa, affine), 'output_FA.nii.gz')
 ```
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```matlab
 data_img = spm_select('ExtFPList', '/path/to/data', '.*\.nii$');

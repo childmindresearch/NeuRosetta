@@ -4,33 +4,33 @@ let's see a short minimal example for Artifact Detection and Correction in these
 
 These codes are for demonstration purposes -- contexts in which these codes were used, necessary assumptions, and detailed explanations are not shown.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 ```bash
 3dDespike -prefix output.nii -ignore 5 input.nii
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ANTs doesn't specifically have artifact detection and correction but you can use N4 for bias field correction.
 ```bash
 N4BiasFieldCorrection -d 3 -i input.nii -o output.nii 
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 ```bash
 fsl_motion_outliers -i input.nii -o output.nii -s output_metric.txt
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 ```bash
 mri_robust_template --mov input1.nii input2.nii --template output.nii
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 ```bash
 dwidenoise input.nii output.nii
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 There is no direct function for artifact detection and correction in R. Instead, fslr package can be used to incorporate FSL's functionalities into R. Here is an example of doing this with fslr:
 
 ```r
@@ -39,19 +39,19 @@ img <- readnii("input.nii")
 img_despike <- fsl_motion_outliers(img)
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 ```
 wb_command -cifti-outlier-replace -cifti input.dscalar.nii -replace NAN -column 1 
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 Nilearn package in python can be used for artifact detection and correction.
 ```python
 from nilearn.image import clean_img
 cleaned_img = clean_img("input.nii", standardize=True, detrend=True)
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 ```matlab
 spm('defaults', 'FMRI');
 spm_jobman('initcfg');

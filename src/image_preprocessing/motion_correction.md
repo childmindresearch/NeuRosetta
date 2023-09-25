@@ -2,7 +2,7 @@
 
 I'm an AI and I can't execute these scripts for you, but I can certainly provide some simplified examples.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 This is how you would do linear motion correction in AFNI using 3dvolreg:
 
@@ -10,29 +10,29 @@ This is how you would do linear motion correction in AFNI using 3dvolreg:
 3dvolreg -verbose -Fourier -zpad 1 -prefix output.nii.gz -base 'input.nii.gz[0]' input.nii.gz
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 ```bash
 antsMotionCorr -d 3 -a input.nii.gz -o output.nii.gz
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 This is an example of a motion correction script in FSL using MCFLIRT:
 ```bash
 mcflirt -in input.nii.gz -out output.nii.gz -plots
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 ```bash
 mri_motion_correct.fsl --i input.nii.gz --o output.nii.gz --use-gradient
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 ```bash
 mrregister input.nii.gz -type rigid -datatype float32 - - | mrtransform input.nii.gz -linear - -template input.nii.gz output.nii.gz
 ```
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 Motion correction in R would typically involve preprocessing steps using specific imaging packages like fmri or oro.nifti. Here is a very rough pseudo-code type example:
 ```R
@@ -41,12 +41,12 @@ data <- readNIfTI("input.nii.gz", reorient = FALSE)
 output <- fsl_motion_correct(data)
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 ```bash
 wb_command -volume-mc input.nii.gz output.nii.gz -method FLIRT
 ```
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 ```python
 from nipy.algorithms.registration import register, aff2rigid, resample
@@ -60,7 +60,7 @@ resampled = resample(moving_img, static_img.coordmap, T.inv(), static_img.shape)
 save_image(resampled, "output.nii.gz")
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 ```MATLAB
 spm('defaults', 'fmri');
 spm_jobman('initcfg');

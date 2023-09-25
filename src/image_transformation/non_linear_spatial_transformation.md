@@ -2,13 +2,13 @@
 
 While I can provide high-level pseudo code snippets for some of the platforms mentioned, it's essential to understand that some tools may not support non-linear spatial transformations directly (like R, Workbench Command, and pure Python). Here are examples of using each tool:
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 ```
 3dQwarp -source subject.nii -base template.nii -prefix warped_subject.nii
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ```
 antsRegistration -d 3 -r [ template.nii, subject.nii, 1 ] \
@@ -17,23 +17,23 @@ antsRegistration -d 3 -r [ template.nii, subject.nii, 1 ] \
 -o [subject_to_template_,warped_subject.nii]
 ```
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 ```bash
 fnirt --in=subject --aff=sub_to_temp.mat --cout=nonlinear_trans --iout=warped_subject --jout=jac --config=T1_2_MNI152_2mm  --ref=MNI152_T1_2mm --refmask=MNI152_T1_2mm_brain_mask_dil --warpres=10,10,10
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 ```bash
 mri_robust_register --mov subject.nii.gz --dst template.nii.gz --mapmov registered.nii.gz --cost mi
 ```
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 MRtrix3 does not perform non-linear registration in isolation. It does, however, allow interfacing with ANTS registration. For direct MRtrix-based image registration, only linear transformations are currently supported. 
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 R does not support non-linear spatial transformations by itself. However, ANTsR (https://github.com/stnava/ANTsR) interface can be used.
 
@@ -45,11 +45,11 @@ mytx <- antsRegistration( fixedImage, movingImage , 'SyN' )
 warpedImage <- antsApplyTransforms( fixedImage, movingImage, mytx$forwardTransforms )
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 Workbench commands primarily operate on surface-based data. Non-linear volume registration can be performed using other software packages such as FSL, ANTs, or AFNI.
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 Similar to R, pure Python requires interfaces to other software systems to perform non-linear registration. Following is an example with Nipype module which interfaces with ANTs:
 
@@ -69,7 +69,7 @@ reg.cmdline
 reg.run()
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 ```matlab
 matlabbatch{1}.spm.spatial.normalise.estwrite.subj.vol = {'subject.nii,1'};

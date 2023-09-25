@@ -2,7 +2,7 @@
 
 I'm sorry but it's not possible to provide full scripts for each of these softwares, especially since conducting MVPA includes steps like preprocessing, feature extraction, training a model, and testing it, which can not be encapsulated in a few lines of codes. However, I can definitely provide you with basic syntax and commands used in each software.
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 In AFNI, you can use the 3dsvm function to perform Multivariate Pattern Analysis. The typical usage is:
 
@@ -10,11 +10,11 @@ In AFNI, you can use the 3dsvm function to perform Multivariate Pattern Analysis
 3dsvm -bucket stats -mask mask+orig -trainvol training+orig -trainlabels training_labels.1D -testvol testing+orig -testlabels testing_labels.1D
 ```
 
-## <img src="../../icons/ants.png" height="24px" /> ANTs
+## <img src="../icons/ants.png" height="24px" /> ANTs
 
 ANTs is typically used for registration and normalization. It doesn't directly support MVPA from command line, but you can load the image into python or any other tool to perform MVPA.
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 FSL has a tool called PyMVPA which can be used for Multivariate Pattern Analysis. The sample usage can be like this:
 
@@ -22,15 +22,15 @@ FSL has a tool called PyMVPA which can be used for Multivariate Pattern Analysis
 fsl_sub python mvpa2.suite.Classifier filename.nii.gz
 ```
 
-## <img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer
+## <img src="../icons/freesurfer.png" height="24px" /> FreeSurfer
 
 Like ANTs, FreeSurfer is used mostly for segmentation and registration but it doesn't directly support MVPA.
 
-## <img src="../../icons/mrtrix.png" height="24px" /> MRtrix
+## <img src="../icons/mrtrix.png" height="24px" /> MRtrix
 
 MRtrix is used more for diffusion imaging analysis. For MVPA, you would typically export the imaging data after preprocessing and perform the analysis with another tool like python or R.
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 In R, you can use the nnet or e1071 libraries to perform MVPA. Here is a short example:
 
@@ -40,11 +40,11 @@ svm_model <- svm(label~., data=train_data)
 predictions <- predict(svm_model, newdata=test_data)
 ```
 
-## <img src="../../icons/workbench_command.png" height="24px" /> Workbench Command
+## <img src="../icons/workbench_command.png" height="24px" /> Workbench Command
 
 The Connectome Workbench doesn't directly support MVPA as its primarily a visualization tool. You would need to export your data to another tool for statistical learning.
 
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 Here's how you might use nilearn to perform MVPA:
 
@@ -65,7 +65,7 @@ for train, test in cv.split(X):
     predictions = svm.predict(X[test])
 ```
 
-## <img src="../../icons/spm.png" height="24px" /> SPM
+## <img src="../icons/spm.png" height="24px" /> SPM
 
 SPM doesn't directly support MVPA; typically one would use the CoSMoMVPA toolbox in conjunction with SPM. An example script might look like this:
 

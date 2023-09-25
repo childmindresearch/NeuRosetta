@@ -2,15 +2,15 @@
 
 it's quite a complex task to write scripts for Granger causality Analysis for all these different frameworks as they each have different methods and procedures for doing such analyses. Here are limited examples for a couple of the mentioned frameworks:
 
-## <img src="../../icons/afni.png" height="24px" /> AFNI
+## <img src="../icons/afni.png" height="24px" /> AFNI
 
 AFNI does not natively support Granger Causality Analysis. We typically need to use another software like R or Python's scipy library and then import the results back into AFNI for further analysis. 
 
-## <img src="../../icons/fsl.png" height="24px" /> FSL
+## <img src="../icons/fsl.png" height="24px" /> FSL
 
 Like AFNI, FSL does not directly support Granger Causality Analysis. A similar approach must be taken with substituting sections of the analysis with Python or R scripts.
 
-## <img src="../../icons/r.png" height="24px" /> R
+## <img src="../icons/r.png" height="24px" /> R
 
 The `lmtest` library in R can be used to perform Granger Causality Analysis.
 ```R
@@ -22,7 +22,7 @@ summary(fit)  # Review the fit
 
 grangertest(y ~ x, order=1)  # Perform the Granger causality test
 ```
-## <img src="../../icons/python.png" height="24px" /> Python
+## <img src="../icons/python.png" height="24px" /> Python
 
 The `statsmodels` Python library can also be used for performing Granger causality tests.
 ```python
