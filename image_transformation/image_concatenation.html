@@ -168,30 +168,30 @@
                     <main>
                         <h1 id="image-concatenation"><a class="header" href="#image-concatenation">Image Concatenation</a></h1>
 <p>for each of these software, here's a minimal example of image concatenation:</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dTcat -prefix concatenated.nii input1.nii input2.nii
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">ImageMath 3 concatenated.nii m input1.nii input2.nii
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmerge -t concatenated.nii input1.nii input2.nii
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not directly support image concatenation. However, you can use mris_convert to transform surfaces into volumetric format, then use FSL or AFNI to concatenate.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrcat input1.nii input2.nii concatenated.nii -axis 3
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(oro.nifti)
 nii1 = readNIfTI(&quot;input1.nii&quot;, reorient=FALSE)
 nii2 = readNIfTI(&quot;input2.nii&quot;, reorient=FALSE)
 nii_concat = abind(nii1, nii2)
 writeNIfTI(nii_concat, &quot;concatenated.nii&quot;)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench's wb_command tool doesn't natively support 3D NIFTI concatenation you'll likely need to use another tool (like FSL, ANTs, or AFNI) to do the concatenation.</p>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 nii1 = nib.load('input1.nii')
 nii2 = nib.load('input2.nii')

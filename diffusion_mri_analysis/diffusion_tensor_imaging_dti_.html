@@ -169,17 +169,17 @@
                         <h1 id="diffusion-tensor-imaging-dti"><a class="header" href="#diffusion-tensor-imaging-dti">Diffusion Tensor Imaging (DTI)</a></h1>
 <p>Unfortunately, it would be very complex and space-consuming to provide examples of how to conduct Diffusion Tensor Imaging (DTI) across all the different software you mentioned, as the processes are quite detailed. Additionally, some of these technologies (like Workbench Command) don't easily allow for DTI processing.</p>
 <p>However, I can show short examples in FSL, MRtrix, and a Python-based tool named Dipy. These examples will be minimal and will need to be adjusted based on your specific dataset and research question.</p>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
-<pre><code class="language-bash">## &lt;img src=&quot;../../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
+<pre><code class="language-bash">## &lt;img src=&quot;../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
 # Preprocessing (eddy correct and brain extraction) omitted
 dtifit --data=yourdata --out=youroutput --mask=yourmask --bvecs=bvecs --bvals=bvals
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash"># MRtrix3 tensor fitting
 # Preprocessing (denoise, unring, dwi2mask, biascorrect) is omitted
 dwi2tensor input - | tensor2metric - -fa output_FA.mif -adc output_MD.mif -rd output_RD.mif -ad output_AD.mif
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from dipy.reconst.dti import TensorModel
 from dipy.data import fetch_stanford_hardi, read_stanford_hardi
 

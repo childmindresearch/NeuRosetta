@@ -171,7 +171,7 @@
 <p><strong>1. AFNI (Analysis of Functional NeuroImages)</strong> </p>
 <pre><code>3dcalc -a 'FWHM+orig[0]' -b 'FWHM+orig[1]' -c 'FWHM+orig[2]' -expr 'sqrt(a*a+b*b+c*c)' -prefix FWHM_total
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code>#!/bin/bash
 fixedImage=~/input/fixed.nii.gz
 movingImage=~/input/moving.nii.gz
@@ -179,30 +179,30 @@ outputWarpedImage=~/output/movingWarpedIntoFixed.nii.gz
 
 antsRegistrationSyN.sh -d 3 -f $fixedImage -m $movingImage -o $outputWarpedImage
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <p>FSL provides network modeling tool which called FSLNets.  You have to follow following step:</p>
 <pre><code>#!/bin/sh 
 
 melodic -i4D input.nii.gz -o output --nobet -a concat -d 25 --tr=2 
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code>#!/bin/bash
 SUBJECTS_DIR=/path/to/subjects
 recon-all -s bert -all 
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code>dwi2response dhollander input_dwi.mif wm_response.txt gm_response.txt csf_response.txt
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code>library(igraph)
 g &lt;- graph.formula(A -+ B, B -+ C, C -+ A)
 plot(g)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code>wget https://yourURL/path/to/your.dconn.nii
 wb_command -cifti-parcellate your.dconn.nii yourParcellation.dlabel.nii COLUMN yourOutput.dscalar.nii -method MEAN
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <p>In python, we often use nilearn to perform a simple correlation matrix.</p>
 <pre><code class="language-python">from nilearn import datasets
 from nilearn.input_data import NiftiLabelsMasker

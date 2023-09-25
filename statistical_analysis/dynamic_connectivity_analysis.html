@@ -169,29 +169,29 @@
                         <h1 id="dynamic-connectivity-analysis"><a class="header" href="#dynamic-connectivity-analysis">Dynamic Connectivity Analysis</a></h1>
 <p>Sorry for the misunderstanding, but creating scripts for Dynamic Connectivity Analysis in all of these platforms can't be reduced into a few short lines as such a task includes multiple complex steps and is highly dependent on the exact methods you'd like to employ, the desired outputs, and the image format you are starting with. However, as a starting point, I can provide minimal example scripts for time-series extraction which is generally the first step of any Connectivity Analysis. </p>
 <p>Let's assume we have preprocessed fMRI data and a mask/region of interest (ROI) for each of them.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dmaskave -quiet -mask my_mask.nii.gz my_preprocessed_fmri_data.nii.gz &gt; time_series.txt
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't include dedicated functionalities for time-series extraction. However, you can use it for image preprocessing before extracting the time-series using other tools.</p>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmeants -i my_preprocessed_fmri_data.nii.gz -o time_series.txt -m my_mask.nii.gz
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer doesn't directly support this functionality. It focuses on reconstruction and analysis of cortical surface. After completing these steps with FreeSurfer, you may use other tools to extract time-series.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrstats my_preprocessed_fmri_data.nii.gz -mask my_mask.nii.gz -output mean &gt; time_series.txt
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(fslr)
 dat &lt;- fslr::readnii(&quot;my_preprocessed_fmri_data.nii.gz&quot;)
 mask &lt;- fslr::readnii(&quot;my_mask.nii.gz&quot;)
 time_series &lt;- colMeans(dat[mask == 1, ])
 write.table(time_series, file = &quot;time_series.txt&quot;)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench Command is mainly for dealing data in particular formats (like CIFTI). Please use other tools for extracting time series. </p>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 import numpy as np
 img = nib.load(&quot;my_preprocessed_fmri_data.nii.gz&quot;)
@@ -199,7 +199,7 @@ mask = nib.load(&quot;my_mask.nii.gz&quot;).get_fdata().astype(bool)
 time_series = np.mean(img.get_fdata()[mask], axis=0)
 np.savetxt(&quot;time_series.txt&quot;, time_series)
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">Vf = spm_vol('my_preprocessed_fmri_data.nii.gz');
 Vmask = spm_vol('my_mask.nii.gz');
 mask = spm_read_vols(Vmask) &gt; 0;

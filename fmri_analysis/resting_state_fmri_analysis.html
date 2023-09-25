@@ -169,40 +169,40 @@
                         <h1 id="resting-state-fmri-analysis"><a class="header" href="#resting-state-fmri-analysis">Resting-State fMRI Analysis</a></h1>
 <p>Here are short example scripts for Resting-State fMRI Analysis using different imaging software.</p>
 <p>Please note, these are just templates and might need adjustment based on your specific data or research question. </p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-python">#!/bin/tcsh
 set subj = SUBJECT_ID
 set ddir = PATH_TO_DATA_DIRECTORY
 afni_proc.py -subj_id $subj -dsets $ddir -blocks tshift align tlrc volreg blur mask regress -copy_anat ANATOMICAL_IMAGE -do_block 'tshift  align tlrc -copy_costs' -tcat_remove_first_trs 0 -volreg_align_to THIRD_VOL -volreg_align_e2a -volreg_tlrc_warp -blur_size 6.0 -regress_anaticor -regress_censor_motion 0.3 -regress_censor_outliers 0.1 -regress_apply_mot_types demean deriv -regress_est_blur_epits -regress_est_blur_errts
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">motionCorrection &lt;- antsMotionCorr(fixed_image, moving_image)
 residuals &lt;- residuals(motionCorrection)
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">#!/bin/bash
 set subj=SUBJECT_ID
 data_directory=PATH_TO_DATA_DIRECTORY
 fsl_motion_outliers -i $data_directory/$subj -o motion_assessment -s output_motion_parameter --fd --thresh=0.9 
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -s subjectname -i pathtoimage.nii.gz -all
 bbregister --s subjectname --fmri pathtoimage.nii.gz --init-fsl --bold
 mri_vol2vol --mov pathtoimage.nii.gz --targ $SUBJECTS_DIR/subjectname/mri/orig.mgz --interp nearest --o registered.nii.gz --reg $SUBJECTS_DIR/subjectname/bold/004/register.dof6.dat --no-save-reg
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">dwifslpreproc input_dwi.mif output_dwi.mif -rpe_none -pe_dir AP -nocleanup -eddy_options &quot; --slm=linear --repol&quot;
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(neuroim)
 r_mri_data &lt;- read_nii(&quot;path_to_nii_file&quot;)
 summary(r_mri_data)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -cifti-separate 
 cifti.dtseries.nii COLUMN -metric CORTEX_LEFT mydata.L.gii -metric CORTEX_RIGHT mydata.R.gii -volume ALL mydata_subcort.nii
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('Defaults','fMRI');
 spm_jobman('initcfg');
 
@@ -216,7 +216,7 @@ matlabbatch{1}.spm.temporal.st.prefix = 'a';
 
 spm_jobman('run',matlabbatch);
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 from nilearn import image
 from nilearn import input_data

@@ -168,31 +168,31 @@
                     <main>
                         <h1 id="amplitude-of-low-frequency-fluctuations-alff"><a class="header" href="#amplitude-of-low-frequency-fluctuations-alff">Amplitude of Low-Frequency Fluctuations (ALFF)</a></h1>
 <p>While I can provide sample code snippets, keep in mind that brain imaging analysis is complex and requires a deep understanding of the underlying analysis tools as well as the specific datasets. Always consult credible and trustworthy documentation or consult an expert when working with these algorithms.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
-<pre><code>## &lt;img src=&quot;../../icons/afni.png&quot; height=&quot;24px&quot; /&gt; AFNI
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
+<pre><code>## &lt;img src=&quot;../icons/afni.png&quot; height=&quot;24px&quot; /&gt; AFNI
 3dFourier -highpass 0.01 -lowpass 0.08 -prefix REST_filtered.nii REST.nii
 3dcalc -a REST_filtered.nii -expr 'sqr(a)' -prefix REST_filtered_sqr.nii
 3dFourier -retrend -lowpass 0.08 -prefix REST_filtered_sqr_ALFF.nii REST_filtered_sqr.nii
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs itself does not provide an ALFF calculation functionality.</p>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
-<pre><code>## &lt;img src=&quot;../../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
+<pre><code>## &lt;img src=&quot;../icons/fsl.png&quot; height=&quot;24px&quot; /&gt; FSL
 fslmaths REST -Tmean mean_REST
 fslmaths REST -bptf 33.33 -1 -add mean_REST filtered_REST
 fslmaths filtered_REST -sqr filtered_REST_sqr
 fslmaths filtered_REST_sqr -bptf 33.33 -1 ALFF_REST
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer does not directly support ALFF calculation.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix does not directly support ALFF calculation.</p>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <p>R does not directly support ALFF calculation, but packages such as 'neuRosim' can be used to stimulate brain imaging data.</p>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>The Workbench Command does not directly support ALFF calculation.</p>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
-<pre><code>## &lt;img src=&quot;../../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
+<pre><code>## &lt;img src=&quot;../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
 import numpy as np
 from nilearn import image
 
@@ -203,7 +203,7 @@ tseries_img = image.new_img_like(tseries_img, tseries)
 tseries_img = image.math_img(&quot;img * np.sin(0.01*np.pi*2) * np.sin(0.08*np.pi*2)&quot;, img=tseries_img)
 tseries_img.to_filename('alff.nii.gz')
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code>% ALFF in SPM
 matlabbatch{1}.spm.tools.alff.inputdata = {'/path/to/functional/data.nii'};
 matlabbatch{1}.spm.tools.alff.bandlow = 0.01;

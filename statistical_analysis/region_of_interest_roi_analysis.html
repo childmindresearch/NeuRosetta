@@ -168,10 +168,10 @@
                     <main>
                         <h1 id="region-of-interest-roi-analysis"><a class="header" href="#region-of-interest-roi-analysis">Region-of-Interest (ROI) Analysis</a></h1>
 <p>here are minimal examples of scripts for Region-of-Interest (ROI) Analysis in the respective software packages. Please make sure that appropriate data sets and data paths are provided while running these scripts.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dROIstats -mask ROI.nii -quiet epi.nii &gt; roistats.txt
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-python">from nipype.interfaces.ants import MeasureImageSimilarity
 similarity = MeasureImageSimilarity()
 
@@ -181,16 +181,16 @@ similarity.inputs.moving_image = 'moving_image.nii'
 similarity.inputs.radius_or_number_of_bins = 4
 similarity.run()
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslstats input_image.nii.gz -l 500 -u 600 -V &gt; output.txt
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_segstats --seg seg.nii --i scalar_map.nii --avgwf avg_roi_values.txt
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrstats input_image.mif -mask roi.mif -output mean &gt; roistats.txt
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(neurobase)
 vol &lt;- readnii(&quot;image.nii&quot;)
 roi &lt;- readnii(&quot;mask.nii&quot;)
@@ -198,10 +198,10 @@ roi &lt;- readnii(&quot;mask.nii&quot;)
 roi_stats &lt;- vol[roi==1]
 mean(roi_stats)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-stats input_volume.nii -roi mask_volume.nii &gt; roistats.txt
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nipype.interfaces.fsl import ImageMaths
 from nilearn import masking
 import nibabel as nib
@@ -217,7 +217,7 @@ masked_data = masking.apply_mask(img, 'ROI.nii')
 
 mean_val = masked_data.mean()
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">V = spm_vol('input_image.nii');
 Y = spm_read_vols(V);
 roi = spm_vol('roi.nii');

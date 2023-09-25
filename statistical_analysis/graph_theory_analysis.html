@@ -168,25 +168,25 @@
                     <main>
                         <h1 id="graph-theory-analysis"><a class="header" href="#graph-theory-analysis">Graph Theory Analysis</a></h1>
 <p>it's not feasible to provide a complete script for each software package due to the complexity involved in Graph Theory Analysis. However, I can provide brief examples of the necessary commands.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dNetCorr -in_rois ROI_MASK -inset FUNC_DATA
 </code></pre>
 <p>In AFNI, <code>3dNetCorr</code> command is used to calculate correlations between different regions of interest defined in <code>ROI_MASK</code> on the functional data <code>FUNC_DATA</code>.</p>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTS doesn't directly generate graphs. But it is used to preprocess MRI images. For graph analysis, the outputs are used in other software like FSL or AFNI.</p>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslmaths FUNC_DATA -Tmean MEAN_FUNC_DATA
 fslmaths FUNC_DATA -bptf $(echo &quot;scale=2; 2.8/$TR&quot; | bc) -1 -add MEAN_FUNC_DATA NORM_FUNC_DATA
 fslmeants -i NORM_FUNC_DATA -o ts.txt -m ROI_MASK
 </code></pre>
 <p>In FSL, preprocessing like normalizing and bandpass filtering is performed. Then mean time series <code>ts.txt</code> in the region of interest defined by <code>ROI_MASK</code> is computed.</p>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>FreeSurfer itself does not contain Graph Theory Analysis tools but is used for preprocessing steps. Brain surfaces obtained from FreeSurfer can be used in connectome software like the Connectome Mapping Toolkit.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>In MRtrix, tck2connectome is used to generate a connectome from a tractogram.</p>
 <pre><code class="language-bash">tck2connectome tracks.tck nodes.mif connectome.csv
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(igraph)
 edges &lt;- read.table(&quot;edges.txt&quot;, header = TRUE)
 graph &lt;- graph_from_data_frame(edges)
@@ -194,18 +194,18 @@ centrality &lt;- betweenness(graph)
 print(centrality)
 </code></pre>
 <p>R's igraph package is used for the graph analysis where edges are defined in a text file.</p>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>Workbench mostly deals with surface analyses. It can use CIFTI files to generate graphs:</p>
 <pre><code class="language-bash">wb_command -cifti-correlation FUNC_DATA.dtseries.nii output.dconn.nii
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import networkx as nx
 G = nx.read_edgelist('edges.txt')
 centrality = nx.betweenness_centrality(G)
 print(centrality)
 </code></pre>
 <p>In Python, the NetworkX package is often used for graph theory analysis.</p>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <p>SPM's CONN toolbox is used for the graph theoretical analysis:</p>
 <pre><code class="language-matlab">conn_batch('setup.conditions.name', 'rest');
 conn_batch('Setup.rois.files', 'ROI_MASK');

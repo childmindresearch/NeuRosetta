@@ -168,19 +168,19 @@
                     <main>
                         <h1 id="rigid-spatial-transformation"><a class="header" href="#rigid-spatial-transformation">Rigid Spatial Transformation</a></h1>
 <p>Here are examples of scripts that perform rigid spatial transformations in each package asked.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dAllineate -base base_image.nii -input input_image.nii -prefix output_image.nii -1Dmatrix_save rigid_mat.1D
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">antsRegistrationSyNQuick.sh -d 3 -f fixed.nii -m moving.nii -o output.nii -t r
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">flirt -in input_image.nii -ref reference_image.nii -out output_image.nii -omat rigid_mat.mat -dof 6
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_coreg --s subject --mov input_image.nii --reg output.mgz
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrregister fixed.nii moving.nii -rigid output.mif
 </code></pre>
 <ol start="6">
@@ -191,10 +191,10 @@ image &lt;- readNifti(&quot;input_image.nii&quot;)
 transformed &lt;- rotate(image, theta = c(0,0,pi/4))
 writeNifti(transformed, &quot;transformed_image.nii&quot;)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-affine-resample input.nii affine.mat mm cubic output.nii
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-python">import matlab.engine
 eng = matlab.engine.start_matlab()
 

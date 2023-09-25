@@ -168,32 +168,32 @@
                     <main>
                         <h1 id="brain-parcellation"><a class="header" href="#brain-parcellation">Brain Parcellation</a></h1>
 <p>I'm sorry but it's not possible to provide an example script for all of those within this platform due to the complex nature of brain imaging processing and the extensive code required. However, I can certainly provide one specific code example from one of the listed software and a brief description on how other software are used for Brain Parcellation. Each software listed uses a slightly different approach and commands for this task:</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code> AFNI does not have a direct command for brain parcellation. Instead, brain parcellation with AFNI typically involves using several commands in a pipeline, such as 3dSkullStrip for skull stripping, 3dSeg for segmentation, and whereami for anatomical labeling.
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code> Similar to AFNI, ANTs does not have a direct command for parcellation. Segmentation and parcellation involve using several commands and scripts from the ANTs ecosystem, such as antsBrainExtraction.sh for skull stripping and antsAtroposN4.sh for segmentation.
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code> FSL uses FAST and FIRST modules for parcellation, which are part of a pipeline of several commands.
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code> FreeSurfer uses the recon-all command for brain parcellation.
 </code></pre>
-<h2 id="freesurfer-1"><a class="header" href="#freesurfer-1"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer-1"><a class="header" href="#freesurfer-1"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">recon-all -i input.nii -s subject_01 -all
 </code></pre>
 <p><code>input.nii</code> is the name of your input file and <code>subject_01</code> is the name of the subject. This script runs the entire FreeSurfer pipeline, including brain extraction, segmentation, cortical reconstruction, and parcellation.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code> Similar to AFNI and ANTs, MRtrix uses several different commands in a pipeline, such as dwi2mask for mask derivation, dwi2response for response function estimation, and dwi2fod for FOD estimation.
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code> R does not typically perform brain parcellation on its own, but can manipulate and analyze parcellation data produced by other software via dedicated packages like RNifti or oro.nifti.
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code> Workbench Command utilities are used to manipulate data in surface and volume, in CIFTI format. Specific parcellation tasks would be performed in some other software before or after.
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code> SPM uses segmentation scripts for brain parcellation, typically incorporated into a pipeline of commands.
 </code></pre>
 <p>Example of a brain parcellation command in SPM:</p>
@@ -205,10 +205,10 @@ matlabbatch{1}.spm.spatial.preproc.channel.write = [0 1];
 
 spm_jobman('run', matlabbatch);
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code> In Python, nilearn and nibabel packages can be used for brain parcellation and the manipulation of NIfTI files, respectively. Parcellation in python typically involves defining a parcellation scheme manually or using a predefined atlas and then using those labels to segment the brain.
 </code></pre>
-<h2 id="python-1"><a class="header" href="#python-1"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python-1"><a class="header" href="#python-1"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nilearn import datasets, input_data
 
 dataset = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm') 

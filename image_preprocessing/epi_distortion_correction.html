@@ -168,25 +168,25 @@
                     <main>
                         <h1 id="epi-distortion-correction"><a class="header" href="#epi-distortion-correction">EPI Distortion Correction</a></h1>
 <p>Here are example scripts for EPI distortion correction in the requested neuroimaging software packages. Please make sure to handle your data responsibly and follow the software's instructions for correct usage:</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dDWItoDT -prefix DWI_dt -mask Mask.nii -eigs yes DWI.nii
 3dNwarpApply -nwarp 'warp.nii' -source 'original.nii' -prefix 'corrected.nii'
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">antsApplyTransforms -d 3 -i epi.nii -r anatomical.nii -t warp.nii -o corrected_epi.nii
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fugue --loadfmap=fmap.nii --dwell=dwellt --saveshift=fshift.nii
 applywarp --ref=struct.nii --in=fshift.nii --warp=epi2struct_warp.nii --out=corrected_epi.nii
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_convert epi.nii epi.mgh
 mri_normalize -g 1 -mprage epi.mgh corrected_epi.mgh
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">dwipreproc INPUT.nii OUTPUT.nii -rpe_none -pe_dir AP
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <p>This is a heuristic solution since R does not have brain imaging related packages:</p>
 <pre><code class="language-r">library(neurobase)
 epi &lt;- readnii(&quot;epi.nii&quot;)
@@ -194,11 +194,11 @@ warp &lt;- readnii(&quot;warp.nii&quot;)
 corrected_epi &lt;- epi * warp
 writenii(corrected_epi, &quot;corrected_epi.nii&quot;)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>This one mostly deals with surface models, not EPI distortion corrections:</p>
 <pre><code class="language-bash">wb_command -metric-resample epi.func.gii struct.surf.gii BARYCENTRIC corrected_epi.func.gii
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">from nipype.interfaces import fsl
 fugue = fsl.FUGUE()
 fugue.inputs.in_file = 'epi.nii'
@@ -206,7 +206,7 @@ fugue.inputs.warp_file = 'warp.nii'
 fugue.inputs.save_shift = True
 fugue.run()
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">matlabbatch{1}.spm.spatial.realign.estwrite.data = {'epi.nii,1'};
 matlabbatch{1}.spm.spatial.realign.estwrite.eoptions.quality = 0.9;
 matlabbatch{1}.spm.spatial.realign.estwrite.eoptions.sep = 4;

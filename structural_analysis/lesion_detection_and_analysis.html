@@ -174,7 +174,7 @@
 <pre><code class="language-bash">3dAutomask -prefix lesion_mask.nii.gz lesion.nii.gz
 3dmaskave -mask lesion_mask.nii.gz -quiet lesion.nii.gz &gt; lesion_summary.txt
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">ImageMath 3 lesion_mask.nii.gz Normalize lesion.nii.gz
 Atropos -d 3 -a lesion.nii.gz -m [0.1,1x1x1] -c [2,0] -i kmeans[3] -x lesion_mask.nii.gz
 </code></pre>
@@ -184,21 +184,21 @@ Atropos -d 3 -a lesion.nii.gz -m [0.1,1x1x1] -c [2,0] -i kmeans[3] -x lesion_mas
 <pre><code class="language-bash">fslmaths lesion.nii.gz -bin lesion_mask.nii.gz
 fslstats lesion.nii.gz -k lesion_mask.nii.gz -M &gt; lesion_summary.txt
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_binarize --i lesion.nii.gz --o lesion_mask.mgz --min 0.5
 mri_segstats --i lesion.nii.gz --seg lesion_mask.mgz --summary lesion_summary.txt
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrthreshold lesion.nii.gz lesion_mask.nii.gz -abs 0.5
 mrmath lesion.nii.gz mean -mask lesion_mask.nii.gz -axes 3 - | mrstats - -output mean &gt; lesion_summary.txt
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(neurobase)
 lesion &lt;- readnii(&quot;lesion.nii.gz&quot;)
 lesion_mask &lt;- lesion &gt; 0.5
 lesion_summary &lt;- mean(lesion[lesion_mask])
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -volume-math &quot;(volume &gt; 0.5)&quot; lesion_mask.nii.gz -var volume lesion.nii.gz
 wb_command -volume-stats lesion.nii.gz -reduce MEAN &gt; lesion_summary.txt
 </code></pre>

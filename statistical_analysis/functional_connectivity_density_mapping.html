@@ -168,11 +168,11 @@
                     <main>
                         <h1 id="functional-connectivity-density-mapping"><a class="header" href="#functional-connectivity-density-mapping">Functional Connectivity Density Mapping</a></h1>
 <p>I'm sorry for any confusion, but as a text-based model AI developed by OpenAI, I'm unable to execute code or provide scripts for each of the different neuroimaging software tools you mentioned. However, I can certainly explain a general approach to perform Functional Connectivity Density Mapping using these tools. Let's go through each one.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <p>AFNI does not have a specific function dedicated to Functional Connectivity Density Mapping (FCDM). General functional connectivity can be conducted using 3dTcorr1D or 3dTcorrMap.</p>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs mainly focuses on anatomical image registration and segmentation, it does not have a specific function for FCDM.</p>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code># Generate a mask for the brain
 bet2 subject_image.nii subject_brain.nii
 
@@ -180,15 +180,15 @@ bet2 subject_image.nii subject_brain.nii
 fsl_glm -i subjectA.nii.gz -d matrix -o fcdm.nii.gz
 </code></pre>
 <p>The <code>fsl_glm</code> command can be used to perform general linear modelling, which is useful for FCDM. You may need to construct your design matrix to represent the correlations between regions of interest.</p>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <p>There's no specific method in FreeSurfer for FCDM. FreeSurfer is best used for cortical thickness and surface-based processing.</p>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <p>MRtrix is more tuned for diffusion MRI analyses, and does not have straightforward functions for FCDM.</p>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <p>For the R programming language, you would need to make use of existing neuroimaging packages, such as the <code>neurobase</code> package, and write custom code to perform FCDM.</p>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <p>It mainly focuses on surface-based data visualization. FCDM task would be better accomplished through other software.</p>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">% Load the SPM.mat file
 load('SPM.mat')
 

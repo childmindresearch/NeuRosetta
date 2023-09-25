@@ -168,38 +168,38 @@
                     <main>
                         <h1 id="mean-diffusivity-md-mapping"><a class="header" href="#mean-diffusivity-md-mapping">Mean Diffusivity (MD) Mapping</a></h1>
 <p>in providing example scripts, it's worth noting that brain imaging analysis tools are usually standalone software applications. It's very complex to find a minimal script that can map Mean Diffusivity (MD) for each of the mentioned APIs and command line interfaces, as they all have their own workflows for this task. However, here are some general descriptions of the workflow in different tools:</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-Bash"># DTI requires pre-processing before we can compute Mean Diffusivity 
 afni_proc.py -dsets DTI_data.nii.gz -copy_anat ANAT_data.nii.gz -dti_tr 2.5 -regress_stim_times stim_times*
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-Bash"># In ANTs, the Mean Diffusivity can be estimated if the Diffusion Tensor Image (DTI) is given
 ComputeDTIParameters -d DTI_data.nii.gz -m MD
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-Bash"># DTIFIT is generally used for creating MD maps in FSL
 dtifit --data=DTI_data.nii.gz --mask=brain_mask.nii.gz --bvecs=bvecs --bvals=bvals --out=dti
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-Bash"># FreeSurfer doesn't directly compute Mean Diffusivity, but it can be processed if the DTI is given
 mri_convert DTI_data.nii.gz mri/out.mgz
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-Bash"># In MRtrix, the Mean Diffusivity can also be calculated if the DTI has been estimated first
 dwi2tensor DTI_data.nii.gz - | tensor2metric - -mean diffusivity.nii.gz
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R"># R requires additional packages to perform MD analysis such as dti
 library(dti)
 data &lt;- readDWIdata(&quot;DTI_data.nii.gz&quot;)
 b0 &lt;- data$bvals==0
 MD &lt;- mean(data$ADC[!t0,])
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-Bash"># The Workbench Command doesn't directly compute Mean Diffusivity. However, it can visualize MD maps if they have been created with another tool.
 wb_command -cifti-smoothing dti_MD.dscalar.nii 6 6 COLUMN dti_MD_sm6.dscalar.nii
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-MATLAB">% SPM doesn't directly compute Mean Diffusivity, but it can be performed if the DTI is processed
 spm('defaults','fmri')
 spm_jobman('initcfg')
@@ -208,7 +208,7 @@ matlabbatch{1}.spm.tools.dti.dtifit.outbasename = 'DTI';
 spm_jobman('run',matlabbatch);
 MD = spm_read_vols(spm_vol('DTI_MD.nii.gz'));
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-Python"># Python needs packages such as nibabel and dipy for Mean Diffusivity computation
 import nibabel as nib
 import numpy as np

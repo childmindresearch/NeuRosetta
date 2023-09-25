@@ -169,37 +169,37 @@
                         <h1 id="artifact-detection-and-correction"><a class="header" href="#artifact-detection-and-correction">Artifact Detection and Correction</a></h1>
 <p>let's see a short minimal example for Artifact Detection and Correction in these popular neuroimaging packages. Please understand that most of these packages may not provide a standalone solution to artifact detection and correction. </p>
 <p>These codes are for demonstration purposes -- contexts in which these codes were used, necessary assumptions, and detailed explanations are not shown.</p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dDespike -prefix output.nii -ignore 5 input.nii
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <p>ANTs doesn't specifically have artifact detection and correction but you can use N4 for bias field correction.</p>
 <pre><code class="language-bash">N4BiasFieldCorrection -d 3 -i input.nii -o output.nii 
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fsl_motion_outliers -i input.nii -o output.nii -s output_metric.txt
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_robust_template --mov input1.nii input2.nii --template output.nii
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">dwidenoise input.nii output.nii
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <p>There is no direct function for artifact detection and correction in R. Instead, fslr package can be used to incorporate FSL's functionalities into R. Here is an example of doing this with fslr:</p>
 <pre><code class="language-r">library(fslr)
 img &lt;- readnii(&quot;input.nii&quot;)
 img_despike &lt;- fsl_motion_outliers(img)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code>wb_command -cifti-outlier-replace -cifti input.dscalar.nii -replace NAN -column 1 
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <p>Nilearn package in python can be used for artifact detection and correction.</p>
 <pre><code class="language-python">from nilearn.image import clean_img
 cleaned_img = clean_img(&quot;input.nii&quot;, standardize=True, detrend=True)
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">spm('defaults', 'FMRI');
 spm_jobman('initcfg');
 

@@ -194,7 +194,7 @@ transformed = antsApplyTransforms(fixed, moving, mytx$fwdtransforms)
 # Workbench Command (https://www.humanconnectome.org/software/connectome-workbench)
 wb_command -volume-affine-resample moving.nii affine.mat fixed.nii CUBIC transformed.nii
 
-## &lt;img src=&quot;../../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
+## &lt;img src=&quot;../icons/python.png&quot; height=&quot;24px&quot; /&gt; Python
 import nibabel as nib
 import numpy as np
 from dipy.align.imwarp import SymmetricDiffeomorphicRegistration

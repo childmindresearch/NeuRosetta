@@ -168,36 +168,36 @@
                     <main>
                         <h1 id="image-quality-assessment"><a class="header" href="#image-quality-assessment">Image Quality Assessment</a></h1>
 <p>Here are scripts for each software package you mentioned. These scripts do a basic image quality assessment by displaying image information, calculating image statistics, and checking for corruption or errors in the image file. The exact nature of the image quality assessment will vary depending on the capabilities of each software package. </p>
-<h2 id="afni"><a class="header" href="#afni"><img src="../../icons/afni.png" height="24px" /> AFNI</a></h2>
+<h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
 <pre><code class="language-bash">3dinfo -verb image.nii.gz
 3dBrickStat -mean -var -max -min image.nii.gz
 </code></pre>
-<h2 id="ants"><a class="header" href="#ants"><img src="../../icons/ants.png" height="24px" /> ANTs</a></h2>
+<h2 id="ants"><a class="header" href="#ants"><img src="../icons/ants.png" height="24px" /> ANTs</a></h2>
 <pre><code class="language-bash">PrintHeader image.nii.gz
 ImageMath 3 OutImage.nii.gz Normalize image.nii.gz
 </code></pre>
-<h2 id="fsl"><a class="header" href="#fsl"><img src="../../icons/fsl.png" height="24px" /> FSL</a></h2>
+<h2 id="fsl"><a class="header" href="#fsl"><img src="../icons/fsl.png" height="24px" /> FSL</a></h2>
 <pre><code class="language-bash">fslinfo image.nii.gz
 fslstats image.nii.gz -R -m
 </code></pre>
-<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
+<h2 id="freesurfer"><a class="header" href="#freesurfer"><img src="../icons/freesurfer.png" height="24px" /> FreeSurfer</a></h2>
 <pre><code class="language-bash">mri_info image.mgz
 mri_segstats --i image.mgz
 </code></pre>
-<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
+<h2 id="mrtrix"><a class="header" href="#mrtrix"><img src="../icons/mrtrix.png" height="24px" /> MRtrix</a></h2>
 <pre><code class="language-bash">mrinfo image.mif
 mrstats image.mif
 </code></pre>
-<h2 id="r"><a class="header" href="#r"><img src="../../icons/r.png" height="24px" /> R</a></h2>
+<h2 id="r"><a class="header" href="#r"><img src="../icons/r.png" height="24px" /> R</a></h2>
 <pre><code class="language-R">library(oro.nifti)
 nii &lt;- readNIfTI(&quot;image.nii.gz&quot;, reorient = FALSE)
 summary(nii)
 </code></pre>
-<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
+<h2 id="workbench-command"><a class="header" href="#workbench-command"><img src="../icons/workbench_command.png" height="24px" /> Workbench Command</a></h2>
 <pre><code class="language-bash">wb_command -file-information image.nii.gz
 wb_command -volume-stats image.nii.gz
 </code></pre>
-<h2 id="python"><a class="header" href="#python"><img src="../../icons/python.png" height="24px" /> Python</a></h2>
+<h2 id="python"><a class="header" href="#python"><img src="../icons/python.png" height="24px" /> Python</a></h2>
 <pre><code class="language-python">import nibabel as nib
 
 img = nib.load('image.nii.gz')
@@ -205,7 +205,7 @@ print(img.header)
 print('Data shape:', img.shape)
 print('Data type:', img.get_data_dtype())
 </code></pre>
-<h2 id="spm"><a class="header" href="#spm"><img src="../../icons/spm.png" height="24px" /> SPM</a></h2>
+<h2 id="spm"><a class="header" href="#spm"><img src="../icons/spm.png" height="24px" /> SPM</a></h2>
 <pre><code class="language-matlab">V = spm_vol('image.nii');
 data = spm_read_vols(V);
 fprintf('Dimensions: %d %d %d\n', V.dim);
