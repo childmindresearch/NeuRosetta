@@ -36,7 +36,7 @@ def enquote(s):
     return f'"{s}"'
 
 # save output to file
-OUT_DIR = pl.Path("src")
+OUT_DIR = pl.Path("src-generated")
 
 def ops():
     for category in OPERATIONS_DICT.keys():
