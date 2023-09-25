@@ -41,7 +41,7 @@ def normalize_framework_headings(contents: str):
     contents = re.sub(f'^(?:\\*\\*)?(?:\\d+. )?(?:\\*\\*)?{re_frameworks}(?:\\*\\*)? *$', r"## \1", contents, 0, re.MULTILINE)
 
     for framework in frameworks_normalized:
-        contents = contents.replace(f"## {framework}", f'## <img src="../../icons/{fsafe(framework).lower()}.png" height="24px" /> {framework}')
+        contents = contents.replace(f"## {framework}", f'## <img src="../icons/{fsafe(framework).lower()}.png" height="24px" /> {framework}')
 
     return contents
 
