@@ -166,7 +166,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="network-analysis"><a class="header" href="#network-analysis">Network Analysis</a></h1>
+                        <p><a href="https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/network_analysis.md">Edit on GitHub</a></p>
+<h1 id="network-analysis"><a class="header" href="#network-analysis">Network Analysis</a></h1>
 <p>Due to the complexity in the field of brain imaging, it's nearly impossible to provide minimal example scripts for network analysis in all mentioned software packages in a single response. However, here are examples for a subset of the software mentioned:</p>
 <p><strong>1. AFNI (Analysis of Functional NeuroImages)</strong> </p>
 <pre><code>3dcalc -a 'FWHM+orig[0]' -b 'FWHM+orig[1]' -c 'FWHM+orig[2]' -expr 'sqrt(a*a+b*b+c*c)' -prefix FWHM_total
