@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/image_concatenation.md)
 # Image Concatenation
 
 for each of these software, here's a minimal example of image concatenation:

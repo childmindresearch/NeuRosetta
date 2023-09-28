@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/lesion_detection_and_analysis.md)
 # Lesion Detection and Analysis
 
 While I cannot create comprehensive scripts, I can certainly provide a brief overview and initiate simple commands used in these various brain imaging tools. Note that these samples lack the intricacies required for real-world analysis:

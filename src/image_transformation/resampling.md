@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/resampling.md)
 # Resampling
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/white_matter_tractography.md)
 # White Matter Tractography
 
 For legal and ethical reasons, all personal health information is confidential and protected by law, so it's impossible for me to show you the brain images. But I can provide you example scripts for each software you mentioned. 

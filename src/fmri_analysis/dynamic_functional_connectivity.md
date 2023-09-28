@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/dynamic_functional_connectivity.md)
 # Dynamic Functional Connectivity
 
 Creating an exhaustive script that covers Dynamic Functional Connectivity in each of the mentioned neuroimaging software goes beyond the purposes of this platform and my capabilities as AI. Moreover, flexibility and usability of an MRI pipeline depend greatly on the specific data and goals of the analysis. 

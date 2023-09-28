@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/tractography.md)
 # Tractography
 
 it would be challenging to show minimal example scripts of Tractography in each of the mentioned processing packages due to the complexity of the field. Tractography involves several preprocessing steps (like creating masks, estimating diffusion models, etc.), cannot be practically consolidated into minimal code snippets, and usually these piping steps are done through a GUI or its own scripting language. Here I will list some general commands and examples where feasible:

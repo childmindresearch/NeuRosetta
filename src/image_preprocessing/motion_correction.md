@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/motion_correction.md)
 # Motion Correction
 
 I'm an AI and I can't execute these scripts for you, but I can certainly provide some simplified examples.

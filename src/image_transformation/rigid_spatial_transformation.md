@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/rigid_spatial_transformation.md)
 # Rigid Spatial Transformation
 
 Here are examples of scripts that perform rigid spatial transformations in each package asked.

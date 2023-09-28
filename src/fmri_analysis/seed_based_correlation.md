@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/seed_based_correlation.md)
 # Seed-Based Correlation
 
 here are some minimal example scripts to perform seed-based correlation analysis in some of the programs you've mentioned. Please note that these are incredibly simplified snippets and might not be functional without some adjustments to fit your specific pipelines and data.

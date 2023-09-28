@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/spatial_smoothing.md)
 # Spatial Smoothing
 
 I can provide a small example for each, assuming the necessary software is installed and data is available.

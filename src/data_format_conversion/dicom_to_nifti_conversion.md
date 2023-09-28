@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/data_format_conversion/dicom_to_nifti_conversion.md)
 # DICOM to NIfTI Conversion
 
 here are some examples of how you'd convert DICOM images to NIfTI using different libraries and languages. Please make sure to replace the placeholders with your actual file paths, as needed.

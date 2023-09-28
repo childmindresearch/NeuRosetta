@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/shape_analysis.md)
 # Shape Analysis
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI

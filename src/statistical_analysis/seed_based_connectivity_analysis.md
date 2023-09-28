@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/seed_based_connectivity_analysis.md)
 # Seed-Based Connectivity Analysis
 
 here's a simplified example for each of the requested tools. Note that these examples are meant to illustrate the general usage of the software and are not guaranteed to run without modification.

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/independent_component_analysis_ica_.md)
 # Independent Component Analysis (ICA)
 
 Here are minimal example scripts to perform Independent Component Analysis (ICA) using different neuroimaging analysis software and programming languages. These scripts work with already preprocessed and input data:

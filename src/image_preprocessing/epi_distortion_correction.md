@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/epi_distortion_correction.md)
 # EPI Distortion Correction
 
 Here are example scripts for EPI distortion correction in the requested neuroimaging software packages. Please make sure to handle your data responsibly and follow the software's instructions for correct usage:

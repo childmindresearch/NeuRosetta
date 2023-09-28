@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/amplitude_of_low_frequency_fluctuations_alff_.md)
 # Amplitude of Low-Frequency Fluctuations (ALFF)
 
 While I can provide sample code snippets, keep in mind that brain imaging analysis is complex and requires a deep understanding of the underlying analysis tools as well as the specific datasets. Always consult credible and trustworthy documentation or consult an expert when working with these algorithms.

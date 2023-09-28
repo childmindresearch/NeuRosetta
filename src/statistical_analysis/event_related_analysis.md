@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/event_related_analysis.md)
 # Event-Related Analysis
 
 Sorry for the misunderstanding, but writing scripts for all of these platforms would be quite comprehensive and potentially long. However, I can provide a simple, introductory script for each one to give you a basic understanding of how they work.

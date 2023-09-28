@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/granger_causality_analysis.md)
 # Granger Causality Analysis
 
 it's quite a complex task to write scripts for Granger causality Analysis for all these different frameworks as they each have different methods and procedures for doing such analyses. Here are limited examples for a couple of the mentioned frameworks:

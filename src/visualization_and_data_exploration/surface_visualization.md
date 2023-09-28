@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/visualization_and_data_exploration/surface_visualization.md)
 # Surface Visualization
 
 here are some minimal example scripts for surface visualization in each mentioned tool:

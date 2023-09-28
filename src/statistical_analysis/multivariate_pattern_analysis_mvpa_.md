@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/multivariate_pattern_analysis_mvpa_.md)
 # Multivariate Pattern Analysis (MVPA)
 
 I'm sorry but it's not possible to provide full scripts for each of these softwares, especially since conducting MVPA includes steps like preprocessing, feature extraction, training a model, and testing it, which can not be encapsulated in a few lines of codes. However, I can definitely provide you with basic syntax and commands used in each software.

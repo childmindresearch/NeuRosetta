@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/subcortical_structure_segmentation.md)
 # Subcortical Structure Segmentation
 
 Unfortunately, writing scripts for all of these requests would take a significant amount of text and time, and it's also worth noting that without a dataset to operate on it's hard to be more precise. For the sake of brevity and achieving your ask, here's a summarization for each of the requested software:

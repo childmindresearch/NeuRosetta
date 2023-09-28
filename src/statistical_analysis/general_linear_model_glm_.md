@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/general_linear_model_glm_.md)
 # General Linear Model (GLM)
 
 here are the minimal example scripts for GLM (General Linear Model) in each mentioned software:

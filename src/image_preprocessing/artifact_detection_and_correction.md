@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/artifact_detection_and_correction.md)
 # Artifact Detection and Correction
 
 let's see a short minimal example for Artifact Detection and Correction in these popular neuroimaging packages. Please understand that most of these packages may not provide a standalone solution to artifact detection and correction. 

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/brain_parcellation.md)
 # Brain Parcellation
 
 I'm sorry but it's not possible to provide an example script for all of those within this platform due to the complex nature of brain imaging processing and the extensive code required. However, I can certainly provide one specific code example from one of the listed software and a brief description on how other software are used for Brain Parcellation. Each software listed uses a slightly different approach and commands for this task:

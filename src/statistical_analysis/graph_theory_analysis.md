@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/graph_theory_analysis.md)
 # Graph Theory Analysis
 
 it's not feasible to provide a complete script for each software package due to the complexity involved in Graph Theory Analysis. However, I can provide brief examples of the necessary commands.

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/mean_diffusivity_md_mapping.md)
 # Mean Diffusivity (MD) Mapping
 
 in providing example scripts, it's worth noting that brain imaging analysis tools are usually standalone software applications. It's very complex to find a minimal script that can map Mean Diffusivity (MD) for each of the mentioned APIs and command line interfaces, as they all have their own workflows for this task. However, here are some general descriptions of the workflow in different tools:

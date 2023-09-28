@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/cortical_surface_reconstruction.md)
 # Cortical Surface Reconstruction
 
 while I cannot run these scripts for you, I can certainly provide an example of how they might be structured. Here are example scripts for the different brain imaging software packages you mentioned:

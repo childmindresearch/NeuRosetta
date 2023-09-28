@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/data_format_conversion/dicom_to_minc_conversion.md)
 # DICOM to MINC Conversion
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/dynamic_connectivity_analysis.md)
 # Dynamic Connectivity Analysis
 
 Sorry for the misunderstanding, but creating scripts for Dynamic Connectivity Analysis in all of these platforms can't be reduced into a few short lines as such a task includes multiple complex steps and is highly dependent on the exact methods you'd like to employ, the desired outputs, and the image format you are starting with. However, as a starting point, I can provide minimal example scripts for time-series extraction which is generally the first step of any Connectivity Analysis. 

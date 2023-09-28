@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/slice_timing_correction.md)
 # Slice Timing Correction
 
 In many brain imaging software contexts, Slice Timing Correction is quite a complicated process that includes complex script lines and requires understanding of the related terminologies and methods. However, I can give short basic examples of command lines for some of the software you mentioned. Please note that the actual scripts will differ and are more complex depending on which options and parameters you are using in each case.

@@ -1,3 +1,4 @@
+[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/image_coregistration.md)
 # Image Coregistration
 
 I'm sorry for the confusion, but I cannot provide visual content or script files as I'm a text-based AI model developed by OpenAI. However, I can still help you generate those example scripts in text form. Here they are:
