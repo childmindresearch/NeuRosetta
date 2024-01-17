@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en-US" class="sidebar-visible no-js light">
+<html lang="en-US" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -10,7 +10,7 @@
         
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="../favicon.svg">
         <link rel="shortcut icon" href="../favicon.png">
@@ -31,7 +31,7 @@
         <!-- Custom theme stylesheets -->
 
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
@@ -61,31 +61,38 @@
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var html = document.querySelector('html');
+            var body = document.querySelector('body');
             var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Operations</li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">1.</strong> Image Preprocessing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../image_preprocessing/spatial_smoothing.html"><strong aria-hidden="true">1.1.</strong> Spatial Smoothing</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/motion_correction.html"><strong aria-hidden="true">1.2.</strong> Motion Correction</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/slice_timing_correction.html"><strong aria-hidden="true">1.3.</strong> Slice Timing Correction</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/image_registration.html"><strong aria-hidden="true">1.4.</strong> Image Registration</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/intensity_normalization.html"><strong aria-hidden="true">1.5.</strong> Intensity Normalization</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/skull_stripping.html"><strong aria-hidden="true">1.6.</strong> Skull Stripping</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/bias_field_correction.html"><strong aria-hidden="true">1.7.</strong> Bias Field Correction</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/artifact_detection_and_correction.html"><strong aria-hidden="true">1.8.</strong> Artifact Detection and Correction</a></li><li class="chapter-item expanded "><a href="../image_preprocessing/epi_distortion_correction.html"><strong aria-hidden="true">1.9.</strong> EPI Distortion Correction</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">2.</strong> Image Transformation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../image_transformation/rigid_spatial_transformation.html"><strong aria-hidden="true">2.1.</strong> Rigid Spatial Transformation</a></li><li class="chapter-item expanded "><a href="../image_transformation/affine_spatial_transformation.html"><strong aria-hidden="true">2.2.</strong> Affine Spatial Transformation</a></li><li class="chapter-item expanded "><a href="../image_transformation/non_linear_spatial_transformation.html" class="active"><strong aria-hidden="true">2.3.</strong> Non-linear Spatial Transformation</a></li><li class="chapter-item expanded "><a href="../image_transformation/diffeomorphic_spatial_transformation.html"><strong aria-hidden="true">2.4.</strong> Diffeomorphic Spatial Transformation</a></li><li class="chapter-item expanded "><a href="../image_transformation/resampling.html"><strong aria-hidden="true">2.5.</strong> Resampling</a></li><li class="chapter-item expanded "><a href="../image_transformation/image_concatenation.html"><strong aria-hidden="true">2.6.</strong> Image Concatenation</a></li><li class="chapter-item expanded "><a href="../image_transformation/image_coregistration.html"><strong aria-hidden="true">2.7.</strong> Image Coregistration</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">3.</strong> Statistical Analysis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../statistical_analysis/general_linear_model_glm_.html"><strong aria-hidden="true">3.1.</strong> General Linear Model (GLM)</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/independent_component_analysis_ica_.html"><strong aria-hidden="true">3.2.</strong> Independent Component Analysis (ICA)</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/seed_based_connectivity_analysis.html"><strong aria-hidden="true">3.3.</strong> Seed-Based Connectivity Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/region_of_interest_roi_analysis.html"><strong aria-hidden="true">3.4.</strong> Region-of-Interest (ROI) Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/multivariate_pattern_analysis_mvpa_.html"><strong aria-hidden="true">3.5.</strong> Multivariate Pattern Analysis (MVPA)</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/event_related_analysis.html"><strong aria-hidden="true">3.6.</strong> Event-Related Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/mixed_effects_models.html"><strong aria-hidden="true">3.7.</strong> Mixed-Effects Models</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/graph_theory_analysis.html"><strong aria-hidden="true">3.8.</strong> Graph Theory Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/network_analysis.html"><strong aria-hidden="true">3.9.</strong> Network Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/dynamic_connectivity_analysis.html"><strong aria-hidden="true">3.10.</strong> Dynamic Connectivity Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/granger_causality_analysis.html"><strong aria-hidden="true">3.11.</strong> Granger Causality Analysis</a></li><li class="chapter-item expanded "><a href="../statistical_analysis/functional_connectivity_density_mapping.html"><strong aria-hidden="true">3.12.</strong> Functional Connectivity Density Mapping</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">4.</strong> Structural Analysis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../structural_analysis/cortical_surface_reconstruction.html"><strong aria-hidden="true">4.1.</strong> Cortical Surface Reconstruction</a></li><li class="chapter-item expanded "><a href="../structural_analysis/subcortical_structure_segmentation.html"><strong aria-hidden="true">4.2.</strong> Subcortical Structure Segmentation</a></li><li class="chapter-item expanded "><a href="../structural_analysis/white_matter_tractography.html"><strong aria-hidden="true">4.3.</strong> White Matter Tractography</a></li><li class="chapter-item expanded "><a href="../structural_analysis/volumetric_analysis.html"><strong aria-hidden="true">4.4.</strong> Volumetric Analysis</a></li><li class="chapter-item expanded "><a href="../structural_analysis/cortical_thickness_measurement.html"><strong aria-hidden="true">4.5.</strong> Cortical Thickness Measurement</a></li><li class="chapter-item expanded "><a href="../structural_analysis/shape_analysis.html"><strong aria-hidden="true">4.6.</strong> Shape Analysis</a></li><li class="chapter-item expanded "><a href="../structural_analysis/lesion_detection_and_analysis.html"><strong aria-hidden="true">4.7.</strong> Lesion Detection and Analysis</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">5.</strong> Diffusion MRI Analysis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/diffusion_tensor_imaging_dti_.html"><strong aria-hidden="true">5.1.</strong> Diffusion Tensor Imaging (DTI)</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/tractography.html"><strong aria-hidden="true">5.2.</strong> Tractography</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/tractometry.html"><strong aria-hidden="true">5.3.</strong> Tractometry</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/fractional_anisotropy_fa_mapping.html"><strong aria-hidden="true">5.4.</strong> Fractional Anisotropy (FA) Mapping</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/mean_diffusivity_md_mapping.html"><strong aria-hidden="true">5.5.</strong> Mean Diffusivity (MD) Mapping</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/radial_and_axial_diffusivity_mapping.html"><strong aria-hidden="true">5.6.</strong> Radial and Axial Diffusivity Mapping</a></li><li class="chapter-item expanded "><a href="../diffusion_mri_analysis/white_matter_fiber_bundle_analysis.html"><strong aria-hidden="true">5.7.</strong> White Matter Fiber Bundle Analysis</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">6.</strong> fMRI Analysis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../fmri_analysis/task_based_fmri_analysis.html"><strong aria-hidden="true">6.1.</strong> Task-Based fMRI Analysis</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/resting_state_fmri_analysis.html"><strong aria-hidden="true">6.2.</strong> Resting-State fMRI Analysis</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/seed_based_correlation.html"><strong aria-hidden="true">6.3.</strong> Seed-Based Correlation</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/amplitude_of_low_frequency_fluctuations_alff_.html"><strong aria-hidden="true">6.4.</strong> Amplitude of Low-Frequency Fluctuations (ALFF)</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/regional_homogeneity_reho_.html"><strong aria-hidden="true">6.5.</strong> Regional Homogeneity (ReHo)</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/dynamic_functional_connectivity.html"><strong aria-hidden="true">6.6.</strong> Dynamic Functional Connectivity</a></li><li class="chapter-item expanded "><a href="../fmri_analysis/brain_parcellation.html"><strong aria-hidden="true">6.7.</strong> Brain Parcellation</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">7.</strong> Visualization and Data Exploration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../visualization_and_data_exploration/volume_visualization.html"><strong aria-hidden="true">7.1.</strong> Volume Visualization</a></li><li class="chapter-item expanded "><a href="../visualization_and_data_exploration/glass_brain_visualization.html"><strong aria-hidden="true">7.2.</strong> Glass Brain Visualization</a></li><li class="chapter-item expanded "><a href="../visualization_and_data_exploration/surface_visualization.html"><strong aria-hidden="true">7.3.</strong> Surface Visualization</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">8.</strong> Quality Control</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../quality_control/image_quality_assessment.html"><strong aria-hidden="true">8.1.</strong> Image Quality Assessment</a></li><li class="chapter-item expanded "><a href="../quality_control/outlier_detection.html"><strong aria-hidden="true">8.2.</strong> Outlier Detection</a></li><li class="chapter-item expanded "><a href="../quality_control/motion_outlier_identification.html"><strong aria-hidden="true">8.3.</strong> Motion Outlier Identification</a></li></ol></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">9.</strong> Data Format Conversion</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../data_format_conversion/dicom_to_nifti_conversion.html"><strong aria-hidden="true">9.1.</strong> DICOM to NIfTI Conversion</a></li><li class="chapter-item expanded "><a href="../data_format_conversion/dicom_to_minc_conversion.html"><strong aria-hidden="true">9.2.</strong> DICOM to MINC Conversion</a></li><li class="chapter-item expanded "><a href="../data_format_conversion/minc_to_nifti_conversion.html"><strong aria-hidden="true">9.3.</strong> MINC to NIfTI Conversion</a></li><li class="chapter-item expanded "><a href="../data_format_conversion/nifti_to_dicom_conversion.html"><strong aria-hidden="true">9.4.</strong> NIfTI to DICOM Conversion</a></li></ol></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -116,9 +123,9 @@
                                 <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
@@ -166,7 +173,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <p><a href="https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/non_linear_spatial_transformation.md">Edit on GitHub</a></p>
+                        <p><a href="https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_transformation/non_linear_spatial_transformation.md">Edit on GitHub</a></p>
 <h1 id="non-linear-spatial-transformation"><a class="header" href="#non-linear-spatial-transformation">Non-linear Spatial Transformation</a></h1>
 <p>While I can provide high-level pseudo code snippets for some of the platforms mentioned, it's essential to understand that some tools may not support non-linear spatial transformations directly (like R, Workbench Command, and pure Python). Here are examples of using each tool:</p>
 <h2 id="afni"><a class="header" href="#afni"><img src="../icons/afni.png" height="24px" /> AFNI</a></h2>
@@ -239,7 +246,7 @@ spm_jobman('run',matlabbatch);
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../image_transformation/diffeomorphic_spatial_transformation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../image_transformation/diffeomorphic_spatial_transformation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -253,7 +260,7 @@ spm_jobman('run',matlabbatch);
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../image_transformation/diffeomorphic_spatial_transformation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../image_transformation/diffeomorphic_spatial_transformation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
