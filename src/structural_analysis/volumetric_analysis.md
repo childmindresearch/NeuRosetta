@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/volumetric_analysis.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/structural_analysis/volumetric_analysis.md)
 # Volumetric Analysis
 
 Here are minimal examples of volumetric analysis scripts for each of the requested neuroimaging and programming softwares and packages. Please, remember that these are only basic examples and make sure to modify them according to the specific requirements of your analysis.

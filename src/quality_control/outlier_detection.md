@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/quality_control/outlier_detection.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/quality_control/outlier_detection.md)
 # Outlier Detection
 
 below are examples of scripts in each of the mentioned softwares and languages to perform Outlier Detection. Please take into account that these are minimal examples and might need to be adjusted based on your particular needs and datasets.

@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/network_analysis.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/statistical_analysis/network_analysis.md)
 # Network Analysis
 
 Due to the complexity in the field of brain imaging, it's nearly impossible to provide minimal example scripts for network analysis in all mentioned software packages in a single response. However, here are examples for a subset of the software mentioned:

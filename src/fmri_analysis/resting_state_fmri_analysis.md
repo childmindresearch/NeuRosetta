@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/resting_state_fmri_analysis.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/fmri_analysis/resting_state_fmri_analysis.md)
 # Resting-State fMRI Analysis
 
 Here are short example scripts for Resting-State fMRI Analysis using different imaging software.

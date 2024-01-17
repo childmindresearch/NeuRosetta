@@ -75,7 +75,7 @@ def main():
             contents = replace_sure(contents)
 
             # Add "edit on github" link
-            link = f"https://github.com/cmi-dair/NeuRosetta/edit/main/src/{fname}"
+            link = f"https://github.com/childmindresearch/NeuRosetta/edit/main/src/{fname}"
 
             # Add a heading
             contents = f"[Edit on GitHub]({link})\n# {operation}\n\n{contents}"

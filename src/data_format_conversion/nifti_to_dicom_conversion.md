@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/data_format_conversion/nifti_to_dicom_conversion.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/data_format_conversion/nifti_to_dicom_conversion.md)
 # NIfTI to DICOM Conversion
 
 some of the requested imaging tools do not support direct conversion from NIfTI to DICOM. As such, I can only provide examples for those that support this operation. Here are the examples:

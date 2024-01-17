@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/skull_stripping.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_preprocessing/skull_stripping.md)
 # Skull Stripping
 
 here's an example of running Skull Stripping on different neuroimaging software. However, each tool has a slightly different approach or method for performing Skull Stripping:

@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/non_linear_spatial_transformation.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_transformation/non_linear_spatial_transformation.md)
 # Non-linear Spatial Transformation
 
 While I can provide high-level pseudo code snippets for some of the platforms mentioned, it's essential to understand that some tools may not support non-linear spatial transformations directly (like R, Workbench Command, and pure Python). Here are examples of using each tool:

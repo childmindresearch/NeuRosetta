@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/visualization_and_data_exploration/glass_brain_visualization.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/visualization_and_data_exploration/glass_brain_visualization.md)
 # Glass Brain Visualization
 
 brain imaging software is typically specific to each tool, and some of the ones you mentioned have limited functionality for directly creating a 3D glass brain. This is a rather specialized task. However, I can show an example approach for some of them (Python, R, and MATLAB) and refer to the main steps in the others with links to their official documentation:

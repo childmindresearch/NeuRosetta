@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/radial_and_axial_diffusivity_mapping.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/diffusion_mri_analysis/radial_and_axial_diffusivity_mapping.md)
 # Radial and Axial Diffusivity Mapping
 
 I'm an AI text-based model and I can't write full scripts for all of these different tools due to the complexity and specificities of each software package. However, I can give you a brief overview of how such scripts might look like in a simplified form. 

@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/task_based_fmri_analysis.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/fmri_analysis/task_based_fmri_analysis.md)
 # Task-Based fMRI Analysis
 
 some of these software libraries don't have direct support for task-based fMRI analysis or are considered inappropriate for such tasks. Nevertheless, here are short minimal example scripts for AFNI, FSL, and SPM (via MATLAB). 

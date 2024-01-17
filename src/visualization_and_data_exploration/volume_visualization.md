@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/visualization_and_data_exploration/volume_visualization.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/visualization_and_data_exploration/volume_visualization.md)
 # Volume Visualization
 
 here are minimal examples of volume visualization using different packages:

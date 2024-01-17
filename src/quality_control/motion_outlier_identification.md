@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/quality_control/motion_outlier_identification.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/quality_control/motion_outlier_identification.md)
 # Motion Outlier Identification
 
 Unfortunately, as an AI text-based model, I don't have the capability to "show" images or scripts in the traditional sense. However, I can provide you with examples of text commands or scripts for you to follow, assuming you have already installed the desired neuroimaging toolboxes.

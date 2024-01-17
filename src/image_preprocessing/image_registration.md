@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/image_registration.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_preprocessing/image_registration.md)
 # Image Registration
 
 I can't create scripts for all the platforms you listed because some of them, such as the Workbench command, do not support image registration directly. However, I can create scripts for some of the platforms. Here they are:
