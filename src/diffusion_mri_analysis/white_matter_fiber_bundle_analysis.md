@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/white_matter_fiber_bundle_analysis.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/diffusion_mri_analysis/white_matter_fiber_bundle_analysis.md)
 # White Matter Fiber Bundle Analysis
 
 Unfortunately, writing a script for each of these software packages is beyond the capabilities of this AI. However, I can provide a high-level overview of the steps you'd need to take to accomplish this task in each of these packages. Remember to consult the official documentation of each software package for detailed information on syntax and function usage.

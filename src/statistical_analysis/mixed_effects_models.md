@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/mixed_effects_models.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/statistical_analysis/mixed_effects_models.md)
 # Mixed-Effects Models
 
 Due to the complexity and size of the scripts, it might be more challenging to present them all in one response. Here, I'll show examples for FSL and R, and can provide others upon request.

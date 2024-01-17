@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/tractometry.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/diffusion_mri_analysis/tractometry.md)
 # Tractometry
 
 I'm sorry for the confusion, but it would be quite a task to write a distinct script for each of these software packages since they all require extensive knowledge and understanding of medical imaging and computer science. Moreover, "tractometry" involves reconstructing and analyzing neuronal fiber tracts from diffusion MRI (dMRI) data, and this process is quite complex.

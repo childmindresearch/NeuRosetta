@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/fmri_analysis/regional_homogeneity_reho_.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/fmri_analysis/regional_homogeneity_reho_.md)
 # Regional Homogeneity (ReHo)
 
 I'm sorry for any misunderstanding, but it's not possible to provide example scripts for all the software you mentioned as some of them do not support ReHo (Regional Homogeneity) analysis directly. However, I can provide you examples for a few of them like AFNI and Python and point you to relevant resources for the others.

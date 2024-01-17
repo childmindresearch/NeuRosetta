@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/statistical_analysis/functional_connectivity_density_mapping.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/statistical_analysis/functional_connectivity_density_mapping.md)
 # Functional Connectivity Density Mapping
 
 I'm sorry for any confusion, but as a text-based model AI developed by OpenAI, I'm unable to execute code or provide scripts for each of the different neuroimaging software tools you mentioned. However, I can certainly explain a general approach to perform Functional Connectivity Density Mapping using these tools. Let's go through each one.

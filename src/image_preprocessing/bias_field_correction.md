@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_preprocessing/bias_field_correction.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_preprocessing/bias_field_correction.md)
 # Bias Field Correction
 
 Unfortunately, it would be impractical to provide a full script for each software package as they are all quite involved and have their own interfaces and ways of working. However, here is a snippet of each example script that pertains to performing Bias Field Correction:

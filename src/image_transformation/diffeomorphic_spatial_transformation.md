@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/diffeomorphic_spatial_transformation.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_transformation/diffeomorphic_spatial_transformation.md)
 # Diffeomorphic Spatial Transformation
 
 Here are examples of scripts that perform the Diffeomorphic Spatial Transformation task using different neuroimaging and scientific computing software. Note that the syntax and structure can be different for each software. 

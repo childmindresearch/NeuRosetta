@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/structural_analysis/cortical_thickness_measurement.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/structural_analysis/cortical_thickness_measurement.md)
 # Cortical Thickness Measurement
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI

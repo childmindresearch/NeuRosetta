@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/quality_control/image_quality_assessment.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/quality_control/image_quality_assessment.md)
 # Image Quality Assessment
 
 Here are scripts for each software package you mentioned. These scripts do a basic image quality assessment by displaying image information, calculating image statistics, and checking for corruption or errors in the image file. The exact nature of the image quality assessment will vary depending on the capabilities of each software package. 

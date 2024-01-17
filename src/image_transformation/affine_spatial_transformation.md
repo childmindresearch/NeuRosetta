@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/image_transformation/affine_spatial_transformation.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/image_transformation/affine_spatial_transformation.md)
 # Affine Spatial Transformation
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI

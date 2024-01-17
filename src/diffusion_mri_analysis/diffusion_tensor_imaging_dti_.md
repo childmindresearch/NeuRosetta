@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/diffusion_mri_analysis/diffusion_tensor_imaging_dti_.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/diffusion_mri_analysis/diffusion_tensor_imaging_dti_.md)
 # Diffusion Tensor Imaging (DTI)
 
 Unfortunately, it would be very complex and space-consuming to provide examples of how to conduct Diffusion Tensor Imaging (DTI) across all the different software you mentioned, as the processes are quite detailed. Additionally, some of these technologies (like Workbench Command) don't easily allow for DTI processing.

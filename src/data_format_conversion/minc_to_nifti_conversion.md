@@ -1,4 +1,4 @@
-[Edit on GitHub](https://github.com/cmi-dair/NeuRosetta/edit/main/src/data_format_conversion/minc_to_nifti_conversion.md)
+[Edit on GitHub](https://github.com/childmindresearch/NeuRosetta/edit/main/src/data_format_conversion/minc_to_nifti_conversion.md)
 # MINC to NIfTI Conversion
 
 ## <img src="../icons/afni.png" height="24px" /> AFNI
